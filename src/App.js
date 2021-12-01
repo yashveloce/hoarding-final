@@ -19,16 +19,16 @@ import Login from './Components/Login';
 // import jsPDF from 'jspdf';
 
 const wsLink = new WebSocketLink({
-  uri: 'wss://hoarding-project.herokuapp.com/v1/graphql',
+  uri: 'wss://bharti-expo-ads.hasura.app/v1/graphq',
   options: {
     reconnect: true
   }
 });
 const httpLink = new HttpLink({
-  uri: 'https://hoarding-project.herokuapp.com/v1/graphql',
-  // headers: {
-  //   'x-hasura-access-key': 'zfuKdqZBwg75jKeI79C61mSdzikNYwNhlZeC1kt3pyolwNqIMQ0Re8CNoBiICeJY'
-  // }
+  uri: 'https://bharti-expo-ads.hasura.app/v1/graphql',
+  headers: {
+    'x-hasura-access-key': 'YrlJbtD2GXzRiZk16RqL4AIAHwrI25nvzcUDAIPQlozRWw007jDGsro4mILTcmb6'
+  }
 })
 const splitLink = split(
   ({ query }) => {
