@@ -19,7 +19,7 @@ import Login from './Components/Login';
 // import jsPDF from 'jspdf';
 
 const wsLink = new WebSocketLink({
-  uri: 'wss://bharti-expo-ads.hasura.app/v1/graphq',
+  uri: 'wss://bharti-expo-ads.hasura.app/v1/graphql',
   options: {
     reconnect: true
   }
