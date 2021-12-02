@@ -349,7 +349,7 @@ export default function Inquiry_Master() {
     const [loadInventoryAll, invData] = useLazyQuery(SEARCH_INVENTORYALL);
 
     //Loader
-    if (read_inquiry.loading || read_inventory.loading || read_countries.loading || read_states.loading || read_cities.loading || loading) return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
+    if (read_media.loading|| read_inquiry.loading || read_inventory.loading || read_countries.loading || read_states.loading || read_cities.loading || loading) return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
 
     const onCountryChange = (country_data) => {
         setCountry(country_data.id)

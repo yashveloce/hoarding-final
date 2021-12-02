@@ -726,7 +726,7 @@ function Booking() {
         //console.log(e.target[0].value)
         search_quick_media({ variables: { mobile_no: e.target[0].value } })
     }
-
+console.log(read_electrician.data);
     const columns1 = [
         {
             field: 'sno',

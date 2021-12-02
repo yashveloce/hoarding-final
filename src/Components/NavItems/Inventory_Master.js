@@ -66,7 +66,7 @@ mutation MyMutation($AvailabilityFrom: date = "",$AvailabilityTo: date = "", $Co
   
 `
 const Read_Fabricator=gql`
-subscription MySubscription {
+query MyQuery {
     labor_master(where: {isDeleted: {_eq: "false"}, labor_type: {_eq: 21}}) {
       id
       labor_type
@@ -119,7 +119,7 @@ mutation MyMutation($AvailabilityFrom: date = "",$AvailabilityTo: date = "", $Co
 `
 
 const READ_COUNTRIES = gql`
-subscription MySubscription {
+query MyQuery {
     countries {
       id
       name
@@ -127,7 +127,7 @@ subscription MySubscription {
   }  
 `
 const READ_STATES = gql`
-subscription MySubscription {
+query MyQuery {
     states {
       country_id
       id
@@ -137,7 +137,7 @@ subscription MySubscription {
 `
 
 const READ_CITIES = gql`
-subscription MySubscription {
+query MyQuery {
     cities {
       state_id
       name
@@ -154,7 +154,7 @@ subscription MySubscription($_eq: String = "false"){
   }
 `
 const Read_hoarding_erection = gql`
-subscription MySubscription {
+query MyQuery {
     hoarding_errection {
       id
       location
@@ -557,13 +557,13 @@ export default function Inventory_Master() {
         toast.error('Successfully Deleted')
     }
     const getInventory = useSubscription(getInventory_Master);
-    const read_countries = useSubscription(READ_COUNTRIES)
-    const read_states = useSubscription(READ_STATES)
-    const read_cities = useSubscription(READ_CITIES)
+    const read_countries = useQuery(READ_COUNTRIES)
+    const read_states = useQuery(READ_STATES)
+    const read_cities = useQuery(READ_CITIES)
     const media_type = useSubscription(MEDIA_TYPE)
-    const read_fabricator=useSubscription(Read_Fabricator)
-    const read_hoarding_erection=useSubscription(Read_hoarding_erection)
-    if (getInventory.loading || read_states.loading || read_cities.loading || read_countries.loading || media_type.loading||read_fabricator.loading||read_hoarding_erection.loading) {
+    const read_fabricator=useQuery(Read_Fabricator)
+    const read_hoarding_erection=useQuery(Read_hoarding_erection)
+    if (getInventory.loading || read_states.loading || read_cities.loading || read_countries.loading || media_type.loading||read_fabricator.loading) {
         return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
     }
     //console.log(getInventory.data);
@@ -750,7 +750,6 @@ export default function Inventory_Master() {
             }
         },
     ];
-    console.log(read_hoarding_erection.data);
     const rows = getInventory.data.Inventory_Master;
     let newData = []
     rows.map((item, index) => {
@@ -866,7 +865,8 @@ export default function Inventory_Master() {
                                     value={IlluminationOptions.find(op => op.value === ModalIllumination)}
                                     options={[
                                         { value: 'F LIT', label: 'F LIT' },
-                                        { value: 'NON LIT', label: 'NON LIT' }
+                                        { value: 'NON LIT', label: 'NON LIT' },
+                                        { value: 'All',label:'All'}
                                     ]}
                                     onChange={onModalIlluminationChange}
                                     getOptionLabel={(option) => option.label}
@@ -1099,7 +1099,8 @@ export default function Inventory_Master() {
                                 name="Illumination"
                                 options={[
                                     { value: 'F LIT', label: 'F LIT' },
-                                    { value: 'NON LIT', label: 'NON LIT' }
+                                    { value: 'NON LIT', label: 'NON LIT' },
+                                    { value: 'ALL',label:'ALL'}
                                 ]}
                                 onChange={onIlluminationChange}
                                 getOptionLabel={(option) => option.label}
