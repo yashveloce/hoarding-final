@@ -19,14 +19,14 @@ import Login from './Components/Login';
 // import jsPDF from 'jspdf';
 
 const wsLink = new WebSocketLink({
-  uri: 'wss://bharti-expo-ads.hasura.app/v1/graphql',
+  uri: 'wss://refined-stork-71.hasura.app/v1/graphql',
   options: {
     reconnect: true
   }
 });
 console.log(wsLink);
 const httpLink = new HttpLink({
-  uri: 'https://bharti-expo-ads.hasura.app/v1/graphql',
+  uri: 'https://refined-stork-71.hasura.app/v1/graphql',
   // headers: {
   //   'x-hasura-access-key': 'YrlJbtD2GXzRiZk16RqL4AIAHwrI25nvzcUDAIPQlozRWw007jDGsro4mILTcmb6'
   // }
