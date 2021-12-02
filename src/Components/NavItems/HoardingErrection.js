@@ -6,7 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { toast } from 'react-toastify';
 import { Modal, Button } from "react-bootstrap";
 const GET_HOARDING = gql`
-query MyQuery {
+subscription MySubscription {
   hoarding_errection {
     id
     location
@@ -100,7 +100,7 @@ mutation MyMutation($id: Int = 10) {
 }
 `
 const READ_LABOR = gql`
-query MyQuery {
+subscription MySubscription {
     labor_master(where:{isDeleted: {_eq: "false"}, labor_type: {_eq: 21}}) {
       address
       bank_id
@@ -115,7 +115,7 @@ query MyQuery {
   
 `
 const READ_INVENTORY = gql`
-query MyQuery {
+subscription MySubscription {
     Inventory_Master {
       AvailabilityFrom
       AvailabilityTo
@@ -161,7 +161,7 @@ query MyQuery {
   }
 `
 const READ_ELECTRICIAN = gql`
-query MyQuery {
+subscription MySubscription {
     labor_master(where:{isDeleted: {_eq: "false"}, labor_type: {_eq: 20}}) {
       id
       labor_type
@@ -171,7 +171,7 @@ query MyQuery {
 `
 
 const READ_CIVIL_CONTRACTOR = gql`
-query MyQuery {
+subscription MySubscription {
     labor_master(where: {isDeleted: {_eq: "false"},labor_type: {_eq: 24}}) {
       id
       labor_type
@@ -181,7 +181,7 @@ query MyQuery {
 `
 
 const READ_EXCAVATOR = gql`
-query MyQuery {
+subscription MySubscription {
     labor_master(where:{isDeleted: {_eq: "false"}, labor_type: {_eq: 23}}) {
       id
       labor_type
@@ -233,11 +233,11 @@ export default function HoardingErrection() {
     const [insert_hoarding, insert_data] = useMutation(INSERT_HOARDING);
     const [update_hoarding, update_data] = useMutation(UPDATE_HOARDING);
     const [delete_hoarding, delete_data] = useMutation(DELETE_HOARDING);
-    const read_labor = useQuery(READ_LABOR);
-    const read_excavator = useQuery(READ_EXCAVATOR);
-    const read_electrician = useQuery(READ_ELECTRICIAN);
-    const read_civil_contractor = useQuery(READ_CIVIL_CONTRACTOR);
-    const read_inventory = useQuery(READ_INVENTORY);
+    const read_labor = useSubscription(READ_LABOR);
+    const read_excavator = useSubscription(READ_EXCAVATOR);
+    const read_electrician = useSubscription(READ_ELECTRICIAN);
+    const read_civil_contractor = useSubscription(READ_CIVIL_CONTRACTOR);
+    const read_inventory = useSubscription(READ_INVENTORY);
     const hoarding_data = useSubscription(READ_HOARDING);
     if (hoarding_data.loading || hoarding_data.loading || read_labor.loading || read_inventory.loading || read_excavator.loading || read_electrician.loading || read_civil_contractor.loading) {
         return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;

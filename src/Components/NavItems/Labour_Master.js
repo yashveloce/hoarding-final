@@ -12,7 +12,7 @@ import { Card } from '@material-ui/core';
 import { toast } from 'react-toastify';
 
 const LABOUR_MASTER_QUERY = gql`
-subscription MyQuery($_eq: String = "false"){
+subscription MySubscription($_eq: String = "false"){
     labor_master(where: {isDeleted: {_eq: $_eq}}){
       address
       gst_no
@@ -69,7 +69,7 @@ mutation MyMutation($id: Int = 0, $isDeleted: String = "true") {
 `
 
 const Read_Labour_Master=gql`
-query MyQuery($_eq: String = "false"){
+subscription MySubscription($_eq: String = "false"){
     labour_category_master(where: {isDeleted: {_eq: $_eq}}){
       id
       labour_category
@@ -125,7 +125,7 @@ export default function Labour_Master() {
     const [deleteLabourMaster] = useMutation(LABOUR_MASTER_Delete);
 
 
-    const read_labour =useQuery(Read_Labour_Master);
+    const read_labour =useSubscription(Read_Labour_Master);
 
 
     if (Datatable.loading||read_labour.loading) {

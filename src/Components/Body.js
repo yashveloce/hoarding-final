@@ -121,7 +121,7 @@ const Body = () => {
       <div className='body1'>
 
         <div className="sidenav" id='sidebar'>
-          <Navbar />
+          <Navbar menu_function={menu_toggle}/>
         </div>
         <div className=" main" id='main'>
           <Switch>

@@ -195,7 +195,7 @@ query MyQuery($_eq: String = "false"){
 `
 
 const READ_LABOR = gql`
-query MyQuery($_eq: String = "false"){
+subscription MySubscription($_eq: String = "false"){
     labor_master(where: {isDeleted: {_eq: $_eq}}){
       address
       bank_id
@@ -211,7 +211,7 @@ query MyQuery($_eq: String = "false"){
 
 
 const Read_Printer = gql`
-query MyQuery($_eq: String = "false") {
+subscription MySubscription($_eq: String = "false") {
     labor_master(where: {labor_type: {_eq: 17}, isDeleted: {_eq: $_eq}}) {
       id
       labor_type
@@ -220,7 +220,7 @@ query MyQuery($_eq: String = "false") {
   }  
 `
 const Read_Mounter = gql`
-query MyQuery($_eq: String = "false") {
+subscription MySubscription($_eq: String = "false") {
     labor_master(where: {labor_type: {_eq: 18}, isDeleted: {_eq: $_eq}}) {
       id
       labor_type
@@ -230,7 +230,7 @@ query MyQuery($_eq: String = "false") {
   
 `
 const Read_Electrician = gql`
-query MyQuery($_eq: String = "false") {
+subscription MySubscription($_eq: String = "false") {
     labor_master(where: {labor_type: {_eq: 20}, isDeleted: {_eq: $_eq}}) {
       id
       labor_type
@@ -241,7 +241,7 @@ query MyQuery($_eq: String = "false") {
   
 `
 const Read_Designer = gql`
-query MyQuery($_eq: String = "false") {
+subscription MySubscription($_eq: String = "false") {
     labor_master(where: {labor_type: {_eq: 19}, isDeleted: {_eq: $_eq}}) {
       id
       labor_type
@@ -444,12 +444,12 @@ function Booking() {
     const [update_inquiry] = useMutation(UPDATE_INQUIRY);
     const read_inventory = useQuery(READ_INVENTORY);
     const read_inquiry = useQuery(READ_INQUIRY);
-    const read_labor = useQuery(READ_LABOR);
+    const read_labor = useSubscription(READ_LABOR);
     const read_booking = useSubscription(READ_BOOKING);
-    const read_printer = useQuery(Read_Printer);
-    const read_electrician = useQuery(Read_Electrician);
-    const read_mounter = useQuery(Read_Mounter);
-    const read_designer = useQuery(Read_Designer);
+    const read_printer = useSubscription(Read_Printer);
+    const read_electrician = useSubscription(Read_Electrician);
+    const read_mounter = useSubscription(Read_Mounter);
+    const read_designer = useSubscription(Read_Designer);
     const read_quick_media = useQuery(READ_QUICK_MEDIA);
     const [get_inventory, get_return_data] = useLazyQuery(GET_DATA, {
         onCompleted: data => {

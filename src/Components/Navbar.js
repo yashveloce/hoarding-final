@@ -45,11 +45,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Navbar() {
+export default function Navbar(props) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
+    if(window.matchMedia("(max-width:426px)").matches)
+    {
+      props.menu_function();
+    }
   };
 
   const classes = useStyles();

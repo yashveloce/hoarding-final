@@ -208,12 +208,12 @@ export default function Customer_Master() {
     const onCityChange = (city_data) => {
         setCities(city_data.id);
     }
-    const onDistrictChange = (data_district) => {
+    const onDistrictChange = (e) => {
         //console.log(data_district.district);
-        setDistrict(data_district.district);
+        setDistrict(e.target.value);
     }
-    const onTalukaChange = (data_taluka) => {
-        setTaluka(data_taluka.taluka);
+    const onTalukaChange = (e) => {
+        setTaluka(e.target.value);
     }
     const onRes_addressChange = (e) => {
         setRes_address(e.target.value);
@@ -249,11 +249,11 @@ export default function Customer_Master() {
     const onModalCityChange = (city_data) => {
         setModalCities(city_data.id);
     }
-    const onModalDistrictChange = (data_modal_district) => {
-        setModalDistrict(data_modal_district.district);
+    const onModalDistrictChange = (e) => {
+        setModalDistrict(e.target.value);
     }
-    const onModalTalukaChange = (data_modal_taluka) => {
-        setModalTaluka(data_modal_taluka.taluka);
+    const onModalTalukaChange = (e) => {
+        setModalTaluka(e.target.value);
     }
     const onModalRes_addressChange = (e) => {
         setModalRes_address(e.target.value);
@@ -503,29 +503,29 @@ export default function Customer_Master() {
                             </div>
                             <div className="field col-md-6">
                                 <label className="required">District</label>
-                                {/* <input defaultValue={modalDistrict} onChange={onModalDistrictChange} className="form-control" name="district" type="text" /> */}
-                                <Select
+                                <input defaultValue={modalDistrict} onChange={onModalDistrictChange} className="form-control" name="district" type="text" />
+                                {/* <Select
                                 name="district"
                                 value={read_location.data.location_master.find(op=> op.district === modalDistrict)}
                                 options={read_location.data.location_master}
                                 onChange={onModalDistrictChange}
                                 getOptionLabel={(option) => option.district}
                                 getOptionValue={(option) => option.district}
-                            />
+                            /> */}
                             </div>
                         </div>
                         <div className="row">
                             <div className="field col-md-6">
                                 <label className="required">Taluka</label>
-                                {/* <input defaultValue={modalTaluka} onChange={onModalTalukaChange} className="form-control" name="taluka" type="text" /> */}
-                                <Select
+                                <input defaultValue={modalTaluka} onChange={onModalTalukaChange} className="form-control" name="taluka" type="text" />
+                                {/* <Select
                                 name="taluka"
                                 value={read_location.data.location_master.find(op=> op.taluka === modalTaluka)}
                                 options={read_location.data.location_master}
                                 onChange={onModalTalukaChange}
                                 getOptionLabel={(option) => option.taluka}
                                 getOptionValue={(option) => option.taluka}
-                            />
+                            /> */}
                             </div>
                             <div className="field col-md-6">
                                 <label className="required">Resident Address</label>
@@ -643,25 +643,25 @@ export default function Customer_Master() {
                     <div className="row">
                         <div className="field col-md-4">
                             <label className="required">District</label>
-                            {/* <input onChange={onDistrictChange} type="text" name="district" className="form-control" /> */}
-                            <Select
+                            <input onChange={onDistrictChange} type="text" name="district" className="form-control" />
+                            {/* <Select
                                 name="district"
                                 options={read_location.data.location_master}
                                 onChange={onDistrictChange}
                                 getOptionLabel={(option) => option.district}
                                 getOptionValue={(option) => option.district}
-                            />
+                            /> */}
                         </div>
                         <div className="field col-md-4">
                             <label className="required">Taluka</label>
-                            {/* <input onChange={onTalukaChange} type="text" name="taluka" className="form-control" /> */}
-                            <Select
+                            <input onChange={onTalukaChange} type="text" name="taluka" className="form-control" />
+                            {/* <Select
                                 name="taluka"
                                 options={read_location.data.location_master}
                                 onChange={onTalukaChange}
                                 getOptionLabel={(option) => option.taluka}
                                 getOptionValue={(option) => option.taluka}
-                            />
+                            /> */}
                         </div>
                         <div className="field col-md-4">
                             <label className="required">Residential Address</label>
@@ -690,7 +690,7 @@ export default function Customer_Master() {
 
                 <div style={{ height: 500, width: '100%' }}>
                     <DataGrid
-                        rows={newData}
+                        rows={newData} 
                         columns={columns}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
