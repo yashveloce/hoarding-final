@@ -126,31 +126,31 @@ const Body = () => {
         <div className=" main" id='main'>
           <Switch>
 
-            <ProtectedRoute exact path='/hoarding-final/' component={Dashboard} />
-            <ProtectedRoute exact path='/hoarding-final/Employee_Master' component={Employee_Master} />
-            <ProtectedRoute exact path='/hoarding-final/Labour_Master' component={Labour_Master} />
-            <ProtectedRoute exact path='/hoarding-final/Location_Master' component={Location_Master} />
-            <ProtectedRoute exact path='/hoarding-final/Customer_Master' component={Customer_Master} />
-            <ProtectedRoute exact path='/hoarding-final/Media_Type_Master' component={Media_Type_Master} />
-            <ProtectedRoute exact path='/hoarding-final/Size_Master' component={Size_Master} />
-            <ProtectedRoute exact path='/hoarding-final/Inventory_Master' component={Inventory_Master} />
-            <ProtectedRoute exact path='/hoarding-final/Industry_Master' component={Industry_Master} />
-            <ProtectedRoute exact path='/hoarding-final/GST_Type_Master' component={GST_Type_Master} />
-            <ProtectedRoute exact path='/hoarding-final/Labor_Category_Master' component={Labor_Category_Master} />
-            <ProtectedRoute exact path='/hoarding-final/Payment_Type' component={Payment_Type} />
-            <ProtectedRoute exact path="/hoarding-final/Availability" component={Availability} />
-            <ProtectedRoute exact path="/hoarding-final/Inquiry_Master" component={Inquiry_Master} />
-            <ProtectedRoute exact path="/hoarding-final/Booking" component={Booking} />
-            <ProtectedRoute exact path="/hoarding-final/Landlord_Management" component={Landloard_Management} />
-            <ProtectedRoute exact path="/hoarding-final/Quick_Media_Proposal" component={Quick_Media_Proposal} />
-            <ProtectedRoute exact path="/hoarding-final/Purchase_Order_Management" component={Purchase_Order_Management} />
-            <ProtectedRoute exact path="/hoarding-final/Flex_and_Vinyl_Management" component={Flex_and_Vinyl_Management} />
-            <ProtectedRoute exact path="/hoarding-final/MonitoringImages" component={MonitoringImages} />
-            <ProtectedRoute exact path="/hoarding-final/Availability_Master" component={Availability_Master} />
-            <ProtectedRoute exact path="/hoarding-final/Hoarding_Insurance" component={Hoarding_Insurance1} />
-            <ProtectedRoute exact path="/hoarding-final/Hoarding_Erection" component={Hoarding_Erection} />
-            <ProtectedRoute exact path="/hoarding-final/Quick_Media" component={Quick_Media} />
-            <ProtectedRoute exact path="/hoarding-final/HoardingErrection" component={HoardingErrection} />
+            <ProtectedRoute exact path='/' component={Dashboard} />
+            <ProtectedRoute exact path='/Employee_Master' component={Employee_Master} />
+            <ProtectedRoute exact path='/Labour_Master' component={Labour_Master} />
+            <ProtectedRoute exact path='/Location_Master' component={Location_Master} />
+            <ProtectedRoute exact path='/Customer_Master' component={Customer_Master} />
+            <ProtectedRoute exact path='/Media_Type_Master' component={Media_Type_Master} />
+            <ProtectedRoute exact path='/Size_Master' component={Size_Master} />
+            <ProtectedRoute exact path='/Inventory_Master' component={Inventory_Master} />
+            <ProtectedRoute exact path='/Industry_Master' component={Industry_Master} />
+            <ProtectedRoute exact path='/GST_Type_Master' component={GST_Type_Master} />
+            <ProtectedRoute exact path='/Labor_Category_Master' component={Labor_Category_Master} />
+            <ProtectedRoute exact path='/Payment_Type' component={Payment_Type} />
+            <ProtectedRoute exact path="/Availability" component={Availability} />
+            <ProtectedRoute exact path="/Inquiry_Master" component={Inquiry_Master} />
+            <ProtectedRoute exact path="/Booking" component={Booking} />
+            <ProtectedRoute exact path="/Landlord_Management" component={Landloard_Management} />
+            <ProtectedRoute exact path="/Quick_Media_Proposal" component={Quick_Media_Proposal} />
+            <ProtectedRoute exact path="/Purchase_Order_Management" component={Purchase_Order_Management} />
+            <ProtectedRoute exact path="/Flex_and_Vinyl_Management" component={Flex_and_Vinyl_Management} />
+            <ProtectedRoute exact path="/MonitoringImages" component={MonitoringImages} />
+            <ProtectedRoute exact path="/Availability_Master" component={Availability_Master} />
+            <ProtectedRoute exact path="/Hoarding_Insurance" component={Hoarding_Insurance1} />
+            <ProtectedRoute exact path="/Hoarding_Erection" component={Hoarding_Erection} />
+            <ProtectedRoute exact path="/Quick_Media" component={Quick_Media} />
+            <ProtectedRoute exact path="/HoardingErrection" component={HoardingErrection} />
           </Switch>
         </div>
       </div>
