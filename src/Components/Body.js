@@ -125,7 +125,7 @@ const Body = () => {
         </div>
         <div className=" main" id='main'>
           <Switch>
-
+            <ProtectedRoute exact path='/hoarding-final' component={Login} />
             <ProtectedRoute exact path='/' component={Dashboard} />
             <ProtectedRoute exact path='/Employee_Master' component={Employee_Master} />
             <ProtectedRoute exact path='/Labour_Master' component={Labour_Master} />
