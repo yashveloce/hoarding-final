@@ -31,7 +31,7 @@ export const ProtectedRoute=({component:Component,...rest})=>{
                 return(
                     <Redirect
                     to={{
-                        pathname:"/Login",
+                        pathname:"/hoarding-final/Login",
                         state:{
                             from:props.location
                         }

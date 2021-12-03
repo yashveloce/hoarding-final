@@ -39,7 +39,7 @@ const Login=() =>
                 auth.login(()=>{
                     localStorage.setItem("userrole",user.role)
                     localStorage.setItem("userdata",formState.username);
-                    history.push("/")
+                    history.push("/hoarding-final/")
                 })
                 //console.log("-----------------"+localStorage.getItem("authenticated"));
             }
