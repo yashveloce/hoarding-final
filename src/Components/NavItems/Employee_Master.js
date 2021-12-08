@@ -432,11 +432,10 @@ export default function Employee_Master() {
                             <input type="number" name="account_no" onChange={onInputChange} className="form-control mt-1" placeholder="enter account number" required />
                         </div>
                     </div>
-                    <div className="field" style={{ width: '100%', textAlign: 'center', marginTop: '40px' }}>
-                        <button className="btn btn-primary" type='submit' style={{ marginRight: '50px', width:'10%' }}>Save</button>
-                        <button className="btn btn-primary" type='reset' style={{ marginRight: '50px', width:'10%' }}>Reset</button>
-                        <br/><br/>
-                        {/* <button className="btn btn-primary" type='Next' style={{ marginLeft: '5%' }}>Next</button> */}
+                    <div className="field" style={{ width: '100%', textAlign: 'center', marginTop: '20px' }}>
+                        <button className="btn btn-primary" type='submit' style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Save</button>
+                        <button className="btn btn-primary" type='reset' style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Reset</button>
+                        {/* <button className="btn btn-primary" type='Next' style={{marginLeft:'5%'}}>Next</button> */}
                     </div>
                 </form>
             </Card>
