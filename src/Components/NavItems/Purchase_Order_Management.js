@@ -5,21 +5,22 @@ import {
   useMutation,
   useQuery,
   gql,
-  useSubscription
+  useSubscription,
+  useLazyQuery
 } from "@apollo/client";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { toast } from 'react-toastify';
 import { Modal, Button } from 'react-bootstrap';
-
+import Select from 'react-select'
 
 
 
 const getPurchase_Master = gql`
-subscription MySubscriptiony($_eq: String = "false"){
+subscription MySubscription($_eq: String = "false"){
     purchase_order(where: {isDeleted: {_eq: $_eq}}){
       billing_name
       billing_address
-      purchase_order_number
+      booking_number
       purchase_order_date
       campaign_name
       quotation_number
@@ -32,18 +33,17 @@ subscription MySubscriptiony($_eq: String = "false"){
   
 `
 const InsertPurchase_Master = gql`
-mutation MyMutation($billing_address: String = "", $billing_name: String = "", $campaign_name: String = "", $company_pan: String = "", $gst_details: String = "", $payment_terms: String = "", $purchase_order_date: String = "", $purchase_order_number: String = "", $quotation_number: String = "") {
-  insert_purchase_order(objects: {billing_address: $billing_address, billing_name: $billing_name, campaign_name: $campaign_name, company_pan: $company_pan, gst_details: $gst_details, payment_terms: $payment_terms, purchase_order_date: $purchase_order_date, purchase_order_number: $purchase_order_number, quotation_number: $quotation_number}) {
-    affected_rows
+mutation MyMutation($billing_address: String = "", $billing_name: String = "", $booking_number: Int!, $campaign_name: String = "", $company_pan: String = "", $gst_details: String = "", $payment_terms: String = "", $purchase_order_date: String = "", $quotation_number: String = "") {
+  insert_purchase_order_one(object: {billing_address: $billing_address, billing_name: $billing_name, booking_number: $booking_number, campaign_name: $campaign_name, company_pan: $company_pan, gst_details: $gst_details, payment_terms: $payment_terms, purchase_order_date: $purchase_order_date, quotation_number: $quotation_number}) {
+    id
   }
 }
-
 `
 
 
 const UpdatePurchase_Master = gql`
-mutation MyMutation($id: Int = 0, $billing_address: String = "", $billing_name: String = "", $campaign_name: String = "", $company_pan: String = "", $gst_details: String = "", $payment_terms: String = "", $purchase_order_date: String = "", $purchase_order_number: String = "", $quotation_number: String = "") {
-  update_purchase_order_by_pk(pk_columns: {id: $id}, _set: {billing_address: $billing_address, billing_name: $billing_name, campaign_name: $campaign_name, company_pan: $company_pan, gst_details: $gst_details, payment_terms: $payment_terms, purchase_order_date: $purchase_order_date, purchase_order_number: $purchase_order_number, quotation_number: $quotation_number}) {
+mutation MyMutation($id: Int = 0, $billing_address: String = "", $billing_name: String = "", $campaign_name: String = "", $company_pan: String = "", $gst_details: String = "", $payment_terms: String = "", $purchase_order_date: String = "", $booking_number: Int = "", $quotation_number: String = "") {
+  update_purchase_order_by_pk(pk_columns: {id: $id}, _set: {billing_address: $billing_address, billing_name: $billing_name, campaign_name: $campaign_name, company_pan: $company_pan, gst_details: $gst_details, payment_terms: $payment_terms, purchase_order_date: $purchase_order_date, booking_number: $booking_number, quotation_number: $quotation_number}) {
     billing_address
     billing_name
     campaign_name
@@ -52,7 +52,7 @@ mutation MyMutation($id: Int = 0, $billing_address: String = "", $billing_name: 
     id
     payment_terms
     purchase_order_date
-    purchase_order_number
+    booking_number
     quotation_number
   }
 }
@@ -65,7 +65,7 @@ mutation MyMutation($id: Int = 0, $billing_address: String = "", $billing_name: 
 //     delete_purchase_order_by_pk(id: $id) {
 //       billing_name
 //       billing_address
-//       purchase_order_number
+//       booking_number
 //       purchase_order_date
 //       campaign_name
 //       quotation_number
@@ -77,25 +77,78 @@ mutation MyMutation($id: Int = 0, $billing_address: String = "", $billing_name: 
 //   }
 // `
 
-const DeletePurchase_Master=gql`
+const DeletePurchase_Master = gql`
 mutation MyMutation($isDeleted: String = "true", $id: Int = 0) {
   update_purchase_order_by_pk(pk_columns: {id: $id}, _set: {isDeleted: $isDeleted}) {
     id
   }
 }
+`
 
+const SEARCH_BOOKING = gql`
+query MyQuery{
+  Booking_Calender{
+    BookedBy
+    Confirmation
+    id
+    isDeleted
+    Start_Date_Photo
+    Start_Date
+    Sites
+    Shortlisted
+    Printer
+    PO
+    Mounter
+    Monitoring_Photo
+    End_Date_Photo
+    End_Date
+    Electrician
+    Designer
+    quick_medium {
+      mobile_no
+    }
+  }
+}
+`
+const GET_BOOKING_DATA=gql`
+query MyQuery($mobile_no:String!){
+  Booking_Calender(where: {quick_medium: {mobile_no: {_eq: $mobile_no}}}){
+    BookedBy
+    Confirmation
+    id
+    isDeleted
+    Start_Date_Photo
+    Start_Date
+    Sites
+    Shortlisted
+    Printer
+    PO
+    Mounter
+    Monitoring_Photo
+    End_Date_Photo
+    End_Date
+    Electrician
+    Designer
+    quick_medium {
+      mobile_no
+    }
+  }
+}
 `
 
 function Purchase_Order_Management() {
-
+  var filteredBooking = "";
+  var booking_dat=[];
+  const [get_data,setGet_data] = useState();
   const [showModal, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [searchField,setSearchField]=useState();
   const [purchase, setpurchase] = useState({
     id: '',
     billing_name: '',
     billing_address: '',
-    purchase_order_number: '',
+    booking_number: 0,
     purchase_order_date: '',
     campaign_name: '',
     quotation_number: '',
@@ -103,12 +156,13 @@ function Purchase_Order_Management() {
     company_pan: '',
     payment_terms: '',
   })
+ 
 
   const [modalpurchase, setModalpurchase] = useState({
     id: '',
     billing_name: '',
     billing_address: '',
-    purchase_order_number: '',
+    booking_number: 261,
     purchase_order_date: '',
     campaign_name: '',
     quotation_number: '',
@@ -121,10 +175,20 @@ function Purchase_Order_Management() {
   const [insertpurchasedata] = useMutation(InsertPurchase_Master);
   const [updatepurchasedata] = useMutation(UpdatePurchase_Master);
   const [deletepurchasedata] = useMutation(DeletePurchase_Master);
-
+  const [getBookingData,{loading,error,data}] = useLazyQuery(GET_BOOKING_DATA, {
+    onCompleted: data => {
+        // console.log('data ', data);
+        setGet_data(data);
+    }
+});
+  const getpurchase_order = useSubscription(getPurchase_Master);
+  const searchbookingdata = useQuery(SEARCH_BOOKING);
+  if (searchbookingdata.loading||getpurchase_order.loading||loading) {
+    return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
+  }
   const onFormSubmit = (e) => {
     e.preventDefault();
-    console.log(e.target.value)
+    console.log(purchase)
     insertpurchasedata({ variables: purchase })
     toast.configure();
     toast.success('Successfully Inserted')
@@ -136,7 +200,7 @@ function Purchase_Order_Management() {
       id: row.id,
       billing_name: row.billing_name,
       billing_address: row.billing_address,
-      purchase_order_number: row.purchase_order_number,
+      booking_number: row.booking_number,
       purchase_order_date: row.purchase_order_date,
       campaign_name: row.campaign_name,
       quotation_number: row.quotation_number,
@@ -150,12 +214,16 @@ function Purchase_Order_Management() {
   }
 
   const onInputChange = (e) => {
+    console.log(typeof e.target.value);
     setpurchase({ ...purchase, [e.target.name]: e.target.value })
+    
   }
+  
+  
   const onModalFormSubmit = (e) => {
     e.preventDefault();
     console.log(modalpurchase);
-    updatepurchasedata({ variables: { id: modalpurchase.id, billing_name: modalpurchase.billing_name, billing_address: modalpurchase.billing_address, purchase_order_number: modalpurchase.purchase_order_number, purchase_order_date: modalpurchase.purchase_order_date, campaign_name: modalpurchase.campaign_name, quotation_number: modalpurchase.quotation_number, gst_details: modalpurchase.gst_details, company_pan: modalpurchase.company_pan, payment_terms: modalpurchase.payment_terms } })
+    updatepurchasedata({ variables: { id: modalpurchase.id, billing_name: modalpurchase.billing_name, billing_address: modalpurchase.billing_address, booking_number: modalpurchase.booking_number, purchase_order_date: modalpurchase.purchase_order_date, campaign_name: modalpurchase.campaign_name, quotation_number: modalpurchase.quotation_number, gst_details: modalpurchase.gst_details, company_pan: modalpurchase.company_pan, payment_terms: modalpurchase.payment_terms } })
     toast.configure();
     toast.warning('Successfully Updated')
     handleClose();
@@ -167,7 +235,15 @@ function Purchase_Order_Management() {
     toast.configure();
     toast.error('Successfully Deleted')
   }
-
+  const onSearchFieldChange=(e)=>{
+    setSearchField(e.target.value);
+  }
+  const onsearch = (e) => {
+    e.preventDefault();
+    getBookingData({variables:{mobile_no:searchField}})
+   
+    //search_booking({ variables: { mobile_no: e.target[0].value } })
+  }
 
 
   const columns = [
@@ -175,14 +251,14 @@ function Purchase_Order_Management() {
       field: 'sno',
       headerName: 'Serial No',
       width: 150,
-  },
+    },
     { field: 'id', headerName: 'ID', width: 100 },
 
     { field: 'billing_name', headerName: 'Billing Name', width: 200 },
 
     { field: 'billing_address', headerName: 'Billing Address', width: 200, },
 
-    { field: 'purchase_order_number', headerName: 'Purchase Order number', width: 230, },
+    { field: 'booking_number', headerName: 'Booking number', width: 230, },
 
     { field: 'purchase_order_date', headerName: 'Purchase Order Date', width: 230, },
 
@@ -222,17 +298,17 @@ function Purchase_Order_Management() {
 
 
 
-  const getpurchase_order = useSubscription(getPurchase_Master);
+  
   if (getpurchase_order.loading) {
     return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
   }
   //console.log(getpurchase_order.data);
-
+//console.log(get_data)
   const rows = getpurchase_order.data.purchase_order;
   let newData = []
-    rows.map((item, index) => {
-        newData.push({ sno: index + 1, ...item })
-    })
+  rows.map((item, index) => {
+    newData.push({ sno: index + 1, ...item })
+  })
 
 
 
@@ -252,18 +328,18 @@ function Purchase_Order_Management() {
                 <input defaultValue={modalpurchase.id} onChange={(e) => { onModalInputChange(e) }} className="form-control mt-1" name="id" type="text" required />
               </div>
               <div className="field col-md-6">
-                <label className="required">billing Name</label>
+                <label className="required">Billing Name</label>
                 <input defaultValue={modalpurchase.billing_name} onChange={(e) => { onModalInputChange(e) }} className="form-control mt-1" name="billing_name" type="text" required />
               </div>
             </div>
             <div className="row">
               <div className="field col-md-6">
-                <label className="required">billing address</label>
+                <label className="required">Billing address</label>
                 <input defaultValue={modalpurchase.billing_address} onChange={(e) => { onModalInputChange(e) }} className="form-control mt-1" name="billing_address" type="text" required />
               </div>
               <div className="field col-md-6">
-                <label className="required">Purchase Order Number</label>
-                <input defaultValue={modalpurchase.purchase_order_number} onChange={(e) => { onModalInputChange(e) }} className="form-control mt-1" name="purchse_order_number" type="text" required />
+                <label className="required">Booking Number</label>
+                <input value={modalpurchase.booking_number} onChange={(e) => { onModalInputChange(e) }} className="form-control mt-1" name="booking_number" type="text" required readonly/>
               </div>
             </div>
             <div className="row">
@@ -318,6 +394,17 @@ function Purchase_Order_Management() {
       }}>
         <br />
         <h4 className="text-center">Purchase Order</h4>
+        <form onSubmit={onsearch}>
+          <div className="row">
+            <div className="field col-md-4"></div>
+            <div className="field col-md-4">
+              <label>Search By Customer Mobile</label>
+              <input onChange={onSearchFieldChange} className="form-control" type="text" name="customer_search" /><br />
+              <button className="btn btn-primary" type="submit" style={{ marginRight: '10px', width: '30%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Search</button>
+            </div>
+            <div className="field col-md-4"></div>
+          </div><br />
+        </form>
         <form onSubmit={onFormSubmit} className="form-group">
           <div className="row mt-4">
             <div className="field col-md-4">
@@ -330,8 +417,16 @@ function Purchase_Order_Management() {
               <input placeholder="enter biiling_address" className="form-control mt-1" onChange={onInputChange} name="billing_address" type="text" required />
             </div>
             <div className="field col-md-4">
-              <label className="required">Purchase order Number</label>
-              <input placeholder="enter purchase order number" className="form-control mt-1" onChange={onInputChange} name="purchase_order_number" type="text" required />
+              <label className="required">Booking Number</label>
+              {/* <input placeholder="enter booking number" className="form-control mt-1" onChange={onInputChange} name="booking_number" type="text" required /> */}
+              <select className="form-control" onChange={onInputChange} name="booking_number" required>
+                <option>Select...</option>
+                {
+                  get_data===undefined?"":get_data.Booking_Calender.map((booking)=>(
+                    <option key={booking.id} value={parseInt(booking.id)}>{booking.id}</option>
+                  ))
+                }
+              </select>
             </div><br />
           </div>
           <div className="row mt-4">

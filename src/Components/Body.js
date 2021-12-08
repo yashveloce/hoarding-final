@@ -17,6 +17,7 @@ import Labor_Category_Master from "./NavItems/Labor_Category_Master";
 import Payment_Type from "./NavItems/Payment_Type";
 import Availability from "./NavItems/Availability";
 import Inquiry_Master from "./NavItems/Inquiry_Master";
+import Inquiry_Master1 from "./NavItems/Inquiry_Master1";
 import Booking from "./NavItems/Booking";
 import Landloard_Management from "./NavItems/Landlord_Management";
 import Quick_Media_Proposal from "./NavItems/Quick_Media_Proposal";
@@ -140,6 +141,7 @@ const Body = () => {
             <ProtectedRoute exact path='/Payment_Type' component={Payment_Type} />
             <ProtectedRoute exact path="/Availability" component={Availability} />
             <ProtectedRoute exact path="/Inquiry_Master" component={Inquiry_Master} />
+            <ProtectedRoute exact path="/Inquiry_Master1" component={Inquiry_Master1} />
             <ProtectedRoute exact path="/Booking" component={Booking} />
             <ProtectedRoute exact path="/Landlord_Management" component={Landloard_Management} />
             <ProtectedRoute exact path="/Quick_Media_Proposal" component={Quick_Media_Proposal} />

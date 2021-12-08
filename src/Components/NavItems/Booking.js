@@ -15,10 +15,10 @@ query MyQuery($_eq: String = "false"){
     Inventory_Master(where: {isDeleted: {_eq: $_eq}}){
       AvailabilityFrom
       AvailabilityTo
-      City_Village
-      Country
+      
+      
       DisplayRatePM
-      District
+      
       DrpmRate
       Height
       Illumination
@@ -30,18 +30,12 @@ query MyQuery($_eq: String = "false"){
       OtmcRate
       OtpcRate
       State
-      Taluka
+      District
+      Subdistrict
       Total
       Totalsqft
       Width
-      city {
-        id
-        name
-      }
-      country {
-        id
-        name
-      }
+     
       errection_cost
       errection_year
       fabrication_selection
@@ -51,10 +45,7 @@ query MyQuery($_eq: String = "false"){
         id
         media_type
       }
-      state {
-        id
-        name
-      }
+      
     }
   }
   
@@ -67,8 +58,10 @@ query MyQuery($_eq: String = "Booked", $mobile_no: String!, $_eq1: String = "fal
       proposal_no
       id
       inquiry_master {
+          inventory
         Inventory_Master {
           Location
+          id
         }
       }
     }
@@ -83,10 +76,10 @@ query MyQuery($number: String!, $_eq: String = "false") {
       Inventory_Master {
         AvailabilityFrom
         AvailabilityTo
-        City_Village
-        Country
+        
+        
         DisplayRatePM
-        District
+        
         DrpmRate
         Height
         Illumination
@@ -98,28 +91,19 @@ query MyQuery($number: String!, $_eq: String = "false") {
         OtmcRate
         OtpcRate
         State
-        Taluka
+        District
+        Subdistrict
         Total
         Totalsqft
         Width
-        city {
-          id
-          name
-        }
-        country {
-          id
-          name
-        }
+        
         hoarding_insurance
         id
         media_type_master {
           id
           media_type
         }
-        state {
-          id
-          name
-        }
+        
       }
       email_id
       id
@@ -139,10 +123,10 @@ query MyQuery($_eq: String = "false"){
       Inventory_Master {
         AvailabilityFrom
         AvailabilityTo
-        City_Village
-        Country
+        
+        
         DisplayRatePM
-        District
+        
         DrpmRate
         Height
         Illumination
@@ -154,18 +138,12 @@ query MyQuery($_eq: String = "false"){
         OtmcRate
         OtpcRate
         State
-        Taluka
+        District
+        Subdistrict
         Total
         Totalsqft
         Width
-        city {
-          id
-          name
-        }
-        country {
-          id
-          name
-        }
+        
         errection_cost
         errection_year
         fabrication_selection
@@ -175,10 +153,7 @@ query MyQuery($_eq: String = "false"){
           id
           media_type
         }
-        state {
-          id
-          name
-        }
+        
       }
       email_id
       
@@ -212,7 +187,7 @@ subscription MySubscription($_eq: String = "false"){
 
 const Read_Printer = gql`
 subscription MySubscription($_eq: String = "false") {
-    labor_master(where: {labor_type: {_eq: 17}, isDeleted: {_eq: $_eq}}) {
+    labor_master(where: {labor_type: {_eq: 2}, isDeleted: {_eq: $_eq}}) {
       id
       labor_type
       name
@@ -221,7 +196,7 @@ subscription MySubscription($_eq: String = "false") {
 `
 const Read_Mounter = gql`
 subscription MySubscription($_eq: String = "false") {
-    labor_master(where: {labor_type: {_eq: 18}, isDeleted: {_eq: $_eq}}) {
+    labor_master(where: {labor_type: {_eq: 4}, isDeleted: {_eq: $_eq}}) {
       id
       labor_type
       name
@@ -231,7 +206,7 @@ subscription MySubscription($_eq: String = "false") {
 `
 const Read_Electrician = gql`
 subscription MySubscription($_eq: String = "false") {
-    labor_master(where: {labor_type: {_eq: 20}, isDeleted: {_eq: $_eq}}) {
+    labor_master(where: {labor_type: {_eq: 3}, isDeleted: {_eq: $_eq}}) {
       id
       labor_type
       name
@@ -242,7 +217,7 @@ subscription MySubscription($_eq: String = "false") {
 `
 const Read_Designer = gql`
 subscription MySubscription($_eq: String = "false") {
-    labor_master(where: {labor_type: {_eq: 19}, isDeleted: {_eq: $_eq}}) {
+    labor_master(where: {labor_type: {_eq: 6}, isDeleted: {_eq: $_eq}}) {
       id
       labor_type
       name
@@ -367,6 +342,7 @@ query MyQuery($_eq: String = "false"){
       inquiry_master {
         Inventory_Master {
           Location
+          id
         }
       }
     }
@@ -640,11 +616,11 @@ function Booking() {
     }
     const onFormSubmit = (e) => {
         e.preventDefault();
-        console.log(confirmation);
+        console.log(selected);
         if (shortlisted === "Yes" && confirmation === "Yes") {
             setBooked('Booked');
             for (var i = 0; i < selected.length; i++) {
-                console.log(user)
+                //console.log(user)
                 console.log(selected[i].inquiry_master.inventory);
                 insert_booking({
                     variables: {
@@ -726,7 +702,7 @@ function Booking() {
         //console.log(e.target[0].value)
         search_quick_media({ variables: { mobile_no: e.target[0].value } })
     }
-console.log(read_electrician.data);
+//console.log(read_electrician.data);
     const columns1 = [
         {
             field: 'sno',
@@ -1037,8 +1013,8 @@ console.log(read_electrician.data);
                             const selectedRowData = rows1.filter((row) =>
                                 selectedIDs.has(row.id)
                             )
-                            console.log(selectedRowData);
                             setSelected(selectedRowData)
+                            console.log(selected);
                         }}
                         components={{
                             Toolbar: GridToolbar,

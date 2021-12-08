@@ -56,8 +56,8 @@ query MyQuery($number: String!, $_eq: String = "false") {
       Inventory_Master {
         AvailabilityFrom
         AvailabilityTo
-        City_Village
-        Country
+        Subdistrict
+        State
         DisplayRatePM
         District
         DrpmRate
@@ -70,34 +70,20 @@ query MyQuery($number: String!, $_eq: String = "false") {
         OneTimePrintingCost
         OtmcRate
         OtpcRate
-        State
+        
         Status
-        Taluka
+        
         Total
         Totalsqft
         Width
-        city {
-          id
-          name
-          state_id
-        }
-        country {
-          id
-          name
-          phonecode
-          sortname
-        }
+        
         hoarding_insurance
         id
         media_type_master {
           id
           media_type
         }
-        state {
-          country_id
-          id
-          name
-        }
+        
       }
       email_id
       id
@@ -169,9 +155,11 @@ function Quick_Media() {
         // }
         //console.log(get_data.quick_media==="[]"?"":console.log("Hello"));
         //console.assert()
-        
-        console.log(get_data===undefined?"":get_data.quick_media.at(-1))
-        const counter=get_data.quick_media===undefined?"":get_data.quick_media.at(-1)
+
+        //console.log(get_data.quick_media.length===0);
+        //Code comented now
+        console.log(get_data.quick_media.length===0?"":get_data.quick_media.at(-1))
+        const counter=get_data.quick_media.length===0?"":get_data.quick_media.at(-1)
         console.log(counter);
         if(counter==="")
         {
@@ -208,8 +196,8 @@ function Quick_Media() {
                 id:"",
                 AvailabilityFrom: "",
                 AvailabilityTo: "",
-                City_Village: "",
-                Country: "",
+                Subdistrict: "",
+                State: "",
                 DisplayRatePM: "",
                 District: "",
                 DrpmRate: "",
@@ -222,27 +210,15 @@ function Quick_Media() {
                 OneTimePrintingCost: "",
                 OtmcRate: "",
                 OtpcRate: "",
-                State: "",
-                Taluka: "",
                 Total: "",
                 Totalsqft: "",
                 Width: "",
-                city:{
-                    id: "",
-                    name: ""
-                },
-                country:{
-                    id: "",
-                    name: ""
-                },
+                
                 media_type_master:{
                     id: "",
                     media_type: ""
                 },
-                state:{
-                    id: "",
-                    name: ""
-                }
+               
             }
         }
     ]
@@ -351,30 +327,7 @@ function Quick_Media() {
             headerName: 'Whatsapp Number', 
             width: 200 
         },
-        {
-            field: 'country',
-            headerName: 'Country',
-            width: 190,
-            valueGetter: (params) => {
-                return params.row.Inventory_Master.country.name;
-            }
-        },
-        {
-            field: 'state',
-            headerName: 'State',
-            width: 190,
-            valueGetter: (params) => {
-                return params.row.Inventory_Master.state.name;
-            }
-        },
-        {
-            field: 'city',
-            headerName: 'City',
-            width: 190,
-            valueGetter: (params) => {
-                return params.row.Inventory_Master.city.name;
-            }
-        },
+        
         {
             field: 'media',
             headerName: 'Media',

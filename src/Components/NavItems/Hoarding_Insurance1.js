@@ -24,10 +24,11 @@ query MyQuery {
     Inventory_Master {
       AvailabilityFrom
       AvailabilityTo
-      City_Village
-      Country
-      DisplayRatePM
+      State
       District
+      Subdistrict
+      DisplayRatePM
+      
       DrpmRate
       Height
       Illumination
@@ -38,19 +39,11 @@ query MyQuery {
       OneTimePrintingCost
       OtmcRate
       OtpcRate
-      State
-      Taluka
+    
       Total
       Totalsqft
       Width
-      city {
-        id
-        name
-      }
-      country {
-        id
-        name
-      }
+      
       
       hoarding_insurance
       hoarding_insurance_to
@@ -60,10 +53,7 @@ query MyQuery {
         id
         media_type
       }
-      state {
-        id
-        name
-      }
+      
     }
   }
 `

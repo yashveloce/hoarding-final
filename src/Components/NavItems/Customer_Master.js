@@ -8,27 +8,16 @@ import { Modal, Button } from "react-bootstrap";
 import Select from 'react-select'
 
 const INSERT_CUSTOMER = gql`
-mutation MyMutation($cities: Int = 10, $contact_person: String = "", $country: Int = 10, $district: String = "", $email_id: String = "", $gst_no: String = "", $mobile_no: String = "", $name: String = "", $pan: String = "", $res_address: String = "", $state: Int = 10, $taluka: String = "") {
-    insert_customer_master_one(object: {cities: $cities, contact_person: $contact_person, country: $country, district: $district, email_id: $email_id, gst_no: $gst_no, mobile_no: $mobile_no, name: $name, pan: $pan, res_address: $res_address, state: $state, taluka: $taluka}) {
+mutation MyMutation( $contact_person: String = "", $email_id: String = "", $gst_no: String = "", $mobile_no: String = "", $name: String = "", $pan: String = "", $res_address: String = "") {
+    insert_customer_master_one(object: {contact_person: $contact_person, email_id: $email_id, gst_no: $gst_no, mobile_no: $mobile_no, name: $name, pan: $pan, res_address: $res_address}) {
       id
     }
   }  
 `
 const READ_CUSTOMER = gql`
 subscription MySubscription($_eq: String = "false"){
-    customer_master(where: {isDeleted: {_eq: $_eq}}){
-      cities
+    customer_master(where: {isDeleted: {_eq: $_eq}}){ 
       contact_person
-      country
-      city {
-        id
-        name
-      }
-      district
-      countryByCountry {
-        id
-        name
-      }
       email_id
       gst_no
       id
@@ -36,20 +25,13 @@ subscription MySubscription($_eq: String = "false"){
       name
       pan
       res_address
-      state
-      stateByState {
-        country_id
-        id
-        name
-      }
-      taluka
     }
   }
   
 `
 const UPDATE_CUSTOMER = gql`
-mutation MyMutation($id: Int = 10, $cities: Int = 10, $contact_person: String = "", $country: Int = 10, $district: String = "", $email_id: String = "", $gst_no: String = "", $mobile_no: String = "", $name: String = "", $pan: String = "", $res_address: String = "", $state: Int = 10, $taluka: String = "") {
-    update_customer_master_by_pk(pk_columns: {id: $id}, _set: {cities: $cities, contact_person: $contact_person, country: $country, district: $district, email_id: $email_id, gst_no: $gst_no, mobile_no: $mobile_no, name: $name, pan: $pan, res_address: $res_address, state: $state, taluka: $taluka}) {
+mutation MyMutation($id: Int = 10, $contact_person: String = "",  $email_id: String = "", $gst_no: String = "", $mobile_no: String = "", $name: String = "", $pan: String = "", $res_address: String = "") {
+    update_customer_master_by_pk(pk_columns: {id: $id}, _set: {cities: $cities, contact_person: $contact_person, email_id: $email_id, gst_no: $gst_no, mobile_no: $mobile_no, name: $name, pan: $pan, res_address: $res_address}) {
       id
     }
   }
@@ -101,37 +83,11 @@ query MyQuery {
     }
   }  
 `
-const READ_COUNTRIES = gql`
-query MyQuery {
-    countries {
-      id
-      name
-      phonecode
-      sortname
-    }
-  }  
-`
 
-const READ_STATES = gql`
-query MyQuery {
-    states {
-      country_id
-      id
-      name
-    }
-  }  
-`
 
-const READ_CITIES = gql`
-query MyQuery {
-    cities {
-      state_id
-      name
-      id
-    }
-  }
-  
-`
+
+
+
 
 export default function Customer_Master() {
     const [customValidity, setCustomValidity] = useState();
@@ -146,11 +102,7 @@ export default function Customer_Master() {
     const [gst_no, setGst_no] = useState();
     const [pan, setPan] = useState();
     const [res_address, setRes_address] = useState();
-    const [country, setCountry] = useState();
-    const [state, setState] = useState();
-    const [cities, setCities] = useState();
-    const [district, setDistrict] = useState();
-    const [taluka, setTaluka] = useState();
+    
 
     const [modalId, setModalId] = useState();
     const [modalName, setModalName] = useState();
@@ -160,23 +112,15 @@ export default function Customer_Master() {
     const [modalGst_no, setModalGst_no] = useState();
     const [modalPan, setModalPan] = useState();
     const [modalRes_address, setModalRes_address] = useState();
-    const [modalCountry, setModalCountry] = useState();
-    const [modalState, setModalState] = useState();
-    const [modalCities, setModalCities] = useState();
-    const [modalDistrict, setModalDistrict] = useState();
-    const [modalTaluka, setModalTaluka] = useState();
+    
 
     //Queries
     const [insert_customer] = useMutation(INSERT_CUSTOMER);
     const [update_customer] = useMutation(UPDATE_CUSTOMER);
     const [delete_customer] = useMutation(DELETE_CUSTOMER);
     const read_customer = useSubscription(READ_CUSTOMER);
-    const read_location = useQuery(READ_LOCATION);
-    const read_countries = useQuery(READ_COUNTRIES);
-    const read_states = useQuery(READ_STATES);
-    const read_cities = useQuery(READ_CITIES);
     //Loader
-    if (read_customer.loading || read_countries.loading || read_states.loading || read_cities.loading || read_location.loading) return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
+    if (read_customer.loading) return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
 
     // const onInputChange = (e) => {
     //     setCustomer({ ...customer, [e.target.name]: e.target.value });
@@ -199,22 +143,7 @@ export default function Customer_Master() {
     const onPanChange = (e) => {
         setPan(e.target.value);
     }
-    const onCountryChange = (country_data) => {
-        setCountry(country_data.id);
-    }
-    const onStateChange = (state_data) => {
-        setState(state_data.id);
-    }
-    const onCityChange = (city_data) => {
-        setCities(city_data.id);
-    }
-    const onDistrictChange = (e) => {
-        //console.log(data_district.district);
-        setDistrict(e.target.value);
-    }
-    const onTalukaChange = (e) => {
-        setTaluka(e.target.value);
-    }
+    
     const onRes_addressChange = (e) => {
         setRes_address(e.target.value);
     }
@@ -240,21 +169,7 @@ export default function Customer_Master() {
     const onModalPanChange = (e) => {
         setModalPan(e.target.value);
     }
-    const onModalCountryChange = (country_data) => {
-        setModalCountry(country_data.id);
-    }
-    const onModalStateChange = (state_data) => {
-        setModalState(state_data.id);
-    }
-    const onModalCityChange = (city_data) => {
-        setModalCities(city_data.id);
-    }
-    const onModalDistrictChange = (e) => {
-        setModalDistrict(e.target.value);
-    }
-    const onModalTalukaChange = (e) => {
-        setModalTaluka(e.target.value);
-    }
+    
     const onModalRes_addressChange = (e) => {
         setModalRes_address(e.target.value);
     }
@@ -262,7 +177,7 @@ export default function Customer_Master() {
     const onFormSubmit = (e) => {
         e.preventDefault();
         //console.log(customer);
-        insert_customer({ variables: { name: name, country: country, state: state, cities: cities, district: district, taluka: taluka, res_address: res_address, contact_person: contact_person, mobile_no: mobile_no, email_id: email_id, gst_no: gst_no, pan: pan } })
+        insert_customer({ variables: { name: name, res_address: res_address, contact_person: contact_person, mobile_no: mobile_no, email_id: email_id, gst_no: gst_no, pan: pan } })
         toast.configure();
         toast.success('Successfully Inserted')
     }
@@ -275,11 +190,6 @@ export default function Customer_Master() {
         setModalEmail_id(row.email_id)
         setModalGst_no(row.gst_no)
         setModalPan(row.pan)
-        setModalCountry(row.country)
-        setModalState(row.state)
-        setModalCities(row.cities)
-        setModalDistrict(row.district)
-        setModalTaluka(row.taluka)
         setModalRes_address(row.res_address)
     }
     // const onModalInputChange = (e) => {
@@ -287,7 +197,7 @@ export default function Customer_Master() {
     // }
     const onModalFormSubmit = (e) => {
         e.preventDefault();
-        update_customer({ variables: { id: modalId, name: modalName, country: modalCountry, state: modalState, cities: modalCities, district: modalDistrict, taluka: modalTaluka, res_address: modalRes_address, contact_person: modalContact_person, mobile_no: modalMobile_no, email_id: modalEmail_id, gst_no: modalGst_no, pan: modalPan } })
+        update_customer({ variables: { id: modalId, name: modalName, res_address: modalRes_address, contact_person: modalContact_person, mobile_no: modalMobile_no, email_id: modalEmail_id, gst_no: modalGst_no, pan: modalPan } })
         handleClose();
         toast.configure();
         toast.warning('Successfully Updated')
@@ -313,41 +223,7 @@ export default function Customer_Master() {
             headerName: 'Name',
             width: 160
         },
-        {
-            field: 'country',
-            headerName: 'Country',
-            width: 160,
-            valueGetter: (params) => {
-                return params.row.countryByCountry.name;
-            }
-        },
-        {
-            field: 'state',
-            headerName: 'State',
-            width: 160,
-            valueGetter: (params) => {
-                //console.log(params.row.stateByState)
-                return params.row.stateByState.name;
-            }
-        },
-        {
-            field: 'city',
-            headerName: 'City',
-            width: 160,
-            valueGetter: (params) => {
-                return params.row.city.name;
-            }
-        },
-        {
-            field: 'district',
-            headerName: 'District',
-            width: 190
-        },
-        {
-            field: 'taluka',
-            headerName: 'Taluka',
-            width: 190
-        },
+        
         {
             field: 'mobile_no',
             headerName: 'Mobile Number',
@@ -446,87 +322,7 @@ export default function Customer_Master() {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="field col-md-6">
-                                <label className="required">Country</label>
-                                {/* <input defaultValue={modalCustomer.country} onChange={onModalInputChange} className="form-control mt-1" name="country" type="text" required/> */}
-                                {/* <select value={modalCountry} onChange={onModalCountryChange} name="country" className="form-control mt-1" required>
-                                    <option>--SELECT--</option>
-                                    {read_countries.data.countries.map(country => (
-                                        <option key={country.id} value={country.id}>{country.name}</option>
-                                    ))}
-                                </select> */}
-                                <Select
-                                    name="country"
-                                    options={read_countries.data.countries}
-                                    value={read_countries.data.countries.find(op => op.id === modalCountry)}
-                                    onChange={onModalCountryChange}
-                                    getOptionLabel={(option) => option.name}
-                                    getOptionValue={(option) => option.id}
-                                   />
-                            </div>
-                            <div className="field col-md-6">
-                                <label className="required">State</label>
-                                {/* <select defaultValue={modalState} onChange={onModalStateChange} name="country" className="form-control mt-1" required>
-                                    <option>--SELECT--</option>
-                                    {read_states.data.states.map(state => (
-                                        <option key={state.id} value={state.id}>{state.name}</option>
-                                    ))}
-                                </select> */}
-                                <Select
-                                    name="state"
-                                    options={read_states.data.states}
-                                    value={read_states.data.states.find(op => op.id === modalState)}
-                                    onChange={onModalStateChange}
-                                    getOptionLabel={(option) => option.name}
-                                    getOptionValue={(option) => option.id}
-                                />
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="field col-md-6">
-                                <label className="required">City</label>
-                                {/* <input defaultValue={modalCustomer.country} onChange={onModalInputChange} className="form-control mt-1" name="country" type="text" required/> */}
-                                {/* <select defaultValue={modalCities} onChange={onModalCityChange} name="cities" className="form-control mt-1" required>
-                                    <option>--SELECT--</option>
-                                    {read_cities.data.cities.map(city => (
-                                        <option key={city.id} value={city.id}>{city.name}</option>
-                                    ))}
-                                </select> */}
-                                <Select
-                                    name="city"
-                                    options={read_cities.data.cities}
-                                    value={read_cities.data.cities.find(op => op.id === modalCities)}
-                                    onChange={onModalCityChange}
-                                    getOptionLabel={(option) => option.name}
-                                    getOptionValue={(option) => option.id}
-                                />
-                            </div>
-                            <div className="field col-md-6">
-                                <label className="required">District</label>
-                                <input defaultValue={modalDistrict} onChange={onModalDistrictChange} className="form-control" name="district" type="text" />
-                                {/* <Select
-                                name="district"
-                                value={read_location.data.location_master.find(op=> op.district === modalDistrict)}
-                                options={read_location.data.location_master}
-                                onChange={onModalDistrictChange}
-                                getOptionLabel={(option) => option.district}
-                                getOptionValue={(option) => option.district}
-                            /> */}
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="field col-md-6">
-                                <label className="required">Taluka</label>
-                                <input defaultValue={modalTaluka} onChange={onModalTalukaChange} className="form-control" name="taluka" type="text" />
-                                {/* <Select
-                                name="taluka"
-                                value={read_location.data.location_master.find(op=> op.taluka === modalTaluka)}
-                                options={read_location.data.location_master}
-                                onChange={onModalTalukaChange}
-                                getOptionLabel={(option) => option.taluka}
-                                getOptionValue={(option) => option.taluka}
-                            /> */}
-                            </div>
+                            
                             <div className="field col-md-6">
                                 <label className="required">Resident Address</label>
                                 <input defaultValue={modalRes_address} onChange={onModalRes_addressChange} className="form-control" name="res_address" type="text" />
@@ -586,17 +382,11 @@ export default function Customer_Master() {
                             <input onChange={onPanChange} placeholder="enter pan number" type="text" name="pan" className="form-control mt-1" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" title="Please enter valid pan" required />
                         </div>
                     </div><br />
-                    <h5 style={{ textAlign: 'center' }}>Address</h5>
-                    <div className="row">
+                    {/* <h5 style={{ textAlign: 'center' }}>Address</h5> */}
+                    {/* <div className="row">
                         <div className="field col-md-4">
                             <label className="required">Country</label>
-                            {/* <input onChange={onInputChange} type="text" name="address" className="form-control" /> */}
-                            {/* <select onChange={onInputChange} type="text" name="country" className="form-control mt-1" placeholder="enter country" required>
-                                <option>--SELECT--</option>
-                                {read_countries.data.countries.map(country => (
-                                    <option key={country.id} value={country.id}>{country.name}</option>
-                                ))}
-                            </select> */}
+                            
                             <Select
                                 name="country"
                                 options={read_countries.data.countries}
@@ -607,13 +397,7 @@ export default function Customer_Master() {
                         </div>
                         <div className="field col-md-4">
                             <label className="required">State</label>
-                            {/* <input onChange={onInputChange} type="text" name="address" className="form-control" /> */}
-                            {/* <select onChange={onInputChange} type="text" name="state" className="form-control mt-1" placeholder="enter state" required>
-                                <option>--SELECT--</option>
-                                {read_states.data.states.map(state => (
-                                    <option key={state.id} value={state.id}>{state.name}</option>
-                                ))}
-                            </select> */}
+                           
                             <Select
                                 name="state"
                                 options={read_states.data.states}
@@ -624,13 +408,7 @@ export default function Customer_Master() {
                         </div>
                         <div className="field col-md-4">
                             <label className="required">City</label>
-                            {/* <input onChange={onInputChange} type="text" name="address" className="form-control" /> */}
-                            {/* <select onChange={onInputChange} type="text" name="cities" className="form-control mt-1" placeholder="enter city" required>
-                                <option>--SELECT--</option>
-                                {read_cities.data.cities.map(city => (
-                                    <option key={city.id} value={city.id}>{city.name}</option>
-                                ))}
-                            </select> */}
+                            
                             <Select
                                 name="city"
                                 options={read_cities.data.cities}
@@ -639,33 +417,12 @@ export default function Customer_Master() {
                                 getOptionValue={(option) => option.id}
                             />
                         </div>
-                    </div><br />
+                    </div><br /> */}
                     <div className="row">
-                        <div className="field col-md-4">
-                            <label className="required">District</label>
-                            <input onChange={onDistrictChange} type="text" name="district" className="form-control" />
-                            {/* <Select
-                                name="district"
-                                options={read_location.data.location_master}
-                                onChange={onDistrictChange}
-                                getOptionLabel={(option) => option.district}
-                                getOptionValue={(option) => option.district}
-                            /> */}
-                        </div>
-                        <div className="field col-md-4">
-                            <label className="required">Taluka</label>
-                            <input onChange={onTalukaChange} type="text" name="taluka" className="form-control" />
-                            {/* <Select
-                                name="taluka"
-                                options={read_location.data.location_master}
-                                onChange={onTalukaChange}
-                                getOptionLabel={(option) => option.taluka}
-                                getOptionValue={(option) => option.taluka}
-                            /> */}
-                        </div>
-                        <div className="field col-md-4">
+                        
+                        <div className="field col-md-6">
                             <label className="required">Residential Address</label>
-                            <input onChange={onRes_addressChange} type="text" name="res_address" className="form-control" />
+                            <input onChange={onRes_addressChange} type="text" name="res_address" className="form-control" placeholder="enter residential address"/>
                         </div>
                     </div><br />
                     <br />

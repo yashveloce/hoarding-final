@@ -111,7 +111,7 @@ const Login=() =>
        
           <div class="form-outline mb-3">
             <label class="form-label" for="form3Example4">Password</label>
-            <input type="text" defaultValue={formState.password} onChange={(e)=>{onInputChange(e)}} name="password" class="form-control form-control-lg"
+            <input type="password" defaultValue={formState.password} onChange={(e)=>{onInputChange(e)}} name="password" class="form-control form-control-lg"
               placeholder="Enter password" />
           </div>
 

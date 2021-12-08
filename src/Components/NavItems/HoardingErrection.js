@@ -101,7 +101,7 @@ mutation MyMutation($id: Int = 10) {
 `
 const READ_LABOR = gql`
 subscription MySubscription {
-    labor_master(where:{isDeleted: {_eq: "false"}, labor_type: {_eq: 21}}) {
+    labor_master(where:{isDeleted: {_eq: "false"}, labor_type: {_eq: 7}}) {
       address
       bank_id
       gst_no
@@ -162,7 +162,7 @@ subscription MySubscription {
 `
 const READ_ELECTRICIAN = gql`
 subscription MySubscription {
-    labor_master(where:{isDeleted: {_eq: "false"}, labor_type: {_eq: 20}}) {
+    labor_master(where:{isDeleted: {_eq: "false"}, labor_type: {_eq: 3}}) {
       id
       labor_type
       name
@@ -172,7 +172,7 @@ subscription MySubscription {
 
 const READ_CIVIL_CONTRACTOR = gql`
 subscription MySubscription {
-    labor_master(where: {isDeleted: {_eq: "false"},labor_type: {_eq: 24}}) {
+    labor_master(where: {isDeleted: {_eq: "false"},labor_type: {_eq: 5}}) {
       id
       labor_type
       name
@@ -182,7 +182,7 @@ subscription MySubscription {
 
 const READ_EXCAVATOR = gql`
 subscription MySubscription {
-    labor_master(where:{isDeleted: {_eq: "false"}, labor_type: {_eq: 23}}) {
+    labor_master(where:{isDeleted: {_eq: "false"}, labor_type: {_eq: 1}}) {
       id
       labor_type
       name

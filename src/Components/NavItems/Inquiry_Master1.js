@@ -224,7 +224,7 @@ subscription MySubscription($_eq: String = "false"){
     }
   }
 `
-const SEARCH_INVENTORYALL = gql`
+const SEARCH_INVENTORYALL=gql`
 query MyQuery($state:Int!,$district:Int!,$subdistrict:Int!,$media_type:Int!,$illumination:String="",$_gt:date!){
     Inventory_Master(where: {District: {_eq:$district}, Media_Type: {_eq:$media_type}, State: {_eq:$state}, Subdistrict: {_eq:$subdistrict}, Illumination: {_eq:$illumination}, AvailabilityTo: {_lt:$_gt}}) {
       AvailabilityFrom
@@ -302,7 +302,7 @@ query MyQuery($state:Int!,$district:Int!,$subdistrict:Int!,$media_type:Int!,$ill
   }  
 `
 
-const SEARCH_INVENTORY = gql`
+const SEARCH_INVENTORY=gql`
 query MyQuery($state:Int!,$district:Int!,$subdistrict:Int!,$media_type:Int!,$illumination:String="",$_gt:date!){
     Inventory_Master(where: {District: {_eq:$district}, Media_Type: {_eq:$media_type}, State: {_eq:$state}, Subdistrict: {_eq:$subdistrict}, Illumination: {_eq:$illumination}, AvailabilityTo: {_lt:$_gt}}) {
       AvailabilityFrom
@@ -391,37 +391,14 @@ query MyQuery {
     }
   }  
 `
-const READ_DISTRICT = gql`
-query MyQuery($_eq: Int!) {
-    geo_locations(where: {parent_id: {_eq: $_eq}}) {
-      pin
-      parent_id
-      name
-      location_type
-      id
-      external_id
-    }
-  }  
-`
-const READ_SUBDISTRICT = gql`
-query MyQuery($_eq: Int!) {
-    geo_locations(where: {parent_id: {_eq: $_eq}}) {
-      pin
-      parent_id
-      name
-      location_type
-      id
-      external_id
-    }
-  }  
-`
+
 export default function Inquiry_Master() {
     //variables
+    var data_country = "";
     var data_state = "";
-    var data_district = "";
-    var data_subdistrict = "";
+    var data_city = "";
     //States
-    const [selected, setSelected] = useState();
+    const [selected,setSelected] = useState();
     const [showhide, setShowhide] = useState('hidden');
     const [showModal, setShow] = useState(false);
     const handleClose = () => setShow(false);
@@ -442,7 +419,7 @@ export default function Inquiry_Master() {
     const [emailid, setEmailid] = useState();
     const [whatsappNumber, setWhatsappNumber] = useState();
     const [startDate, setStartDate] = useState();
-
+    
     const [media_type, setMedia_type] = useState();
     const [status, setStatus] = useState();
     //Modal states
@@ -461,8 +438,6 @@ export default function Inquiry_Master() {
     const [insert_inquiry] = useMutation(INSERT_INQUIRY);
     const [update_inquiry] = useMutation(UPDATE_INQUIRY);
     const [delete_inquiry] = useMutation(DELETE_INQUIRY);
-    // const [get_district, read_district] = useLazyQuery(READ_DISTRICT);
-    // const [get_subdistrict, read_subdistrict] = useLazyQuery(READ_SUBDISTRICT);
     const read_media = useQuery(READ_MEDIA);
     const read_inventory = useQuery(READ_INVENTORY);
     const read_inquiry = useSubscription(READ_INQUIRY);
@@ -471,15 +446,13 @@ export default function Inquiry_Master() {
     const [loadInventoryAll, invData] = useLazyQuery(SEARCH_INVENTORYALL);
 
     //Loader
-    if (read_states.loading || read_inquiry.loading || read_inventory.loading) return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
+    if (read_states.loading||read_inquiry.loading || read_inventory.loading ) return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
 
     const onStateChange = (state_data) => {
         setState(state_data.id)
-        // get_district({ variables: { _eq: parseInt(state_data.id) } })
     }
     const onDistrictChange = (district_data) => {
         setDistrict(district_data.id)
-        // get_subdistrict({ variables: { _eq: parseInt(district_data.id) } })
     }
     const onSubdistrictChange = (subdistrict_data) => {
         setSubdistrict(subdistrict_data.id);
@@ -493,14 +466,16 @@ export default function Inquiry_Master() {
     const onDateChange = (e) => {
         setSearchDate(e.target.value);
     }
-
+    
     const onSearch = (e) => {
         setShowhide("visible");
         e.preventDefault();
-        if (illumination === "ALL") {
-            loadInventoryAll({ variables: { state: state, district: district, subdistrict: subdistrict, illumination: "", media_type: searchMediaType, _gt: searchDate } })
+        if(illumination==="ALL")
+        {
+            loadInventoryAll({ variables: { state: state, district: district, subdistrict: subdistrict, illumination: "", media_type: searchMediaType, _gt: searchDate } })   
         }
-        else {
+        else
+        {
             loadInventory({ variables: { state: state, district: district, subdistrict: subdistrict, illumination: illumination, media_type: searchMediaType, _gt: searchDate } })
         }
     }
@@ -522,7 +497,7 @@ export default function Inquiry_Master() {
     const onStartDateChange = (e) => {
         setStartDate(e.target.value);
     }
-
+    
     const onMediaChange = (e) => {
         setMedia_type(e.target.value);
     }
@@ -554,7 +529,7 @@ export default function Inquiry_Master() {
     const onModalStartDateChange = (e) => {
         setModalStartDate(e.target.value);
     }
-
+    
     const onModalMediaChange = (e) => {
         setModalMedia_type(e.target.value);
     }
@@ -563,11 +538,12 @@ export default function Inquiry_Master() {
     }
     const onFormSubmit = (e) => {
         e.preventDefault();
-        for (var i = 0; i < selected.length; i++) {
+        for(var i=0;i<selected.length;i++)
+        {   
             console.log(selected[i]);
-            insert_inquiry({ variables: { sol: sol, name: name, number: number, email_id: emailid, whatsapp_number: whatsappNumber, inventory: selected[i], start_date: startDate, media_type: media_type, status: status } })
+            insert_inquiry({ variables: { sol: sol, name: name, number: number, email_id: emailid, whatsapp_number: whatsappNumber, inventory:selected[i] , start_date: startDate, media_type: media_type, status: status } })
         }
-
+        
         toast.configure();
         toast.success('Successfully Inserted')
     }
@@ -581,14 +557,14 @@ export default function Inquiry_Master() {
         setModalEmailid(row.email_id);
         setModalWhatsappNumber(row.whatsapp_number);
         setModalStartDate(row.start_date);
-
+        
         setModalMedia_type(row.media_type);
         setModalStatus(row.status);
         setModalLocation(row.Inventory_Master.id)
     }
     const onModalFormSubmit = (e) => {
         e.preventDefault();
-        update_inquiry({ variables: { id: modalId, sol: modalSol, name: modalName, number: modalNumber, email_id: modalEmailid, whatsapp_number: modalWhatsappNumber, inventory: modalLocation, start_date: modalStartDate, media_type: modalMedia_type, status: modalStatus } })
+        update_inquiry({ variables: { id: modalId, sol: modalSol, name: modalName, number: modalNumber, email_id: modalEmailid, whatsapp_number: modalWhatsappNumber, inventory: modalLocation, start_date: modalStartDate,  media_type: modalMedia_type, status: modalStatus } })
         handleClose();
         toast.configure();
         toast.warning('Successfully Updated')
@@ -598,32 +574,32 @@ export default function Inquiry_Master() {
         toast.configure();
         toast.error('Successfully Deleted')
     }
-
+   
     const columns1 = [
         {
-            field: 'id',
-            headerName: 'Id',
-            width: 160,
+            field:'id',
+            headerName:'Id',
+            width:160,
         },
-        {
-            field: 'State',
-            headerName: 'State',
-            width: 200
+        { 
+            field: 'State', 
+            headerName: 'State', 
+            width: 200 
         },
-        {
-            field: 'District',
-            headerName: 'District',
-            width: 200
+        { 
+            field: 'District', 
+            headerName: 'District', 
+            width: 200 
         },
-        {
-            field: 'Subdistrict',
-            headerName: 'Subdistrict',
-            width: 200
+        { 
+            field: 'Subdistrict', 
+            headerName: 'Subdistrict', 
+            width: 200 
         },
-        {
-            field: 'Location',
-            headerName: 'Location',
-            width: 200
+        { 
+            field: 'Location', 
+            headerName: 'Location', 
+            width: 200 
         },
         {
             field: 'Media_Type',
@@ -633,75 +609,75 @@ export default function Inquiry_Master() {
                 return params.row.media_type_master.media_type;
             }
         },
-        {
-            field: 'Illumination',
-            headerName: 'Illumination',
-            width: 200
+        { 
+            field: 'Illumination', 
+            headerName: 'Illumination', 
+            width: 200 
         },
-        {
-            field: 'Width',
-            headerName: 'Width',
-            width: 200
+        { 
+            field: 'Width', 
+            headerName: 'Width', 
+            width: 200 
         },
-        {
-            field: 'Height',
-            headerName: 'Height',
-            width: 200
+        { 
+            field: 'Height', 
+            headerName: 'Height', 
+            width: 200 
         },
-        {
-            field: 'NoofDisplay',
-            headerName: 'No Of Display',
-            width: 200
+        { 
+            field: 'NoofDisplay', 
+            headerName: 'No Of Display', 
+            width: 200 
         },
-        {
-            field: 'Totalsqft',
-            headerName: 'Total Sq ft',
-            width: 200
+        { 
+            field: 'Totalsqft', 
+            headerName: 'Total Sq ft', 
+            width: 200 
         },
-        {
-            field: 'DrpmRate',
-            headerName: 'DrpmRate',
-            width: 200
+        { 
+            field: 'DrpmRate', 
+            headerName: 'DrpmRate', 
+            width: 200 
         },
-        {
-            field: 'DisplayRatePM',
-            headerName: 'DisplayRatePM',
-            width: 200
+        { 
+            field: 'DisplayRatePM', 
+            headerName: 'DisplayRatePM', 
+            width: 200 
         },
-        {
-            field: 'OtpcRate',
-            headerName: 'OneTimePrintingCostRate',
-            width: 200
+        { 
+            field: 'OtpcRate', 
+            headerName: 'OneTimePrintingCostRate', 
+            width: 200 
         },
-        {
-            field: 'OneTimePrintingCost',
-            headerName: 'OneTimePrintingCost',
-            width: 200
+        { 
+            field: 'OneTimePrintingCost', 
+            headerName: 'OneTimePrintingCost', 
+            width: 200 
         },
-        {
-            field: 'OtmcRate',
-            headerName: 'OneTimeMountingCostRate',
-            width: 200
+        { 
+            field: 'OtmcRate', 
+            headerName: 'OneTimeMountingCostRate', 
+            width: 200 
         },
-        {
-            field: 'OneTimeMountingCost',
-            headerName: 'OneTimeMountingCost',
-            width: 200
+        { 
+            field: 'OneTimeMountingCost', 
+            headerName: 'OneTimeMountingCost', 
+            width: 200 
         },
-        {
-            field: 'Total',
-            headerName: 'Total',
-            width: 200
+        { 
+            field: 'Total', 
+            headerName: 'Total', 
+            width: 200 
         },
         {
             field: 'AvailabilityFrom',
             headerName: 'Booking From',
             width: 200
         },
-        {
-            field: 'AvailabilityTo',
-            headerName: 'Booking To',
-            width: 200
+        { 
+            field: 'AvailabilityTo', 
+            headerName: 'Booking To', 
+            width: 200 
         },
     ]
     const columns = [
@@ -745,7 +721,7 @@ export default function Inquiry_Master() {
             headerName: 'Start Date',
             width: 190
         },
-
+        
         {
             field: 'Media_Type',
             headerName: 'Media_Type',
@@ -774,7 +750,7 @@ export default function Inquiry_Master() {
             renderCell: (params) => {
                 return (
                     <div className="">
-
+                        
                         <button onClick={() => onEdit(params.row)} data-toggle="tooltip" title="Edit" type="button" className="btn btn-warning"  ><i className="bi bi-pencil-fill"></i></button>
                         <button onClick={() => {
                             const confirmBox = window.confirm(
@@ -796,16 +772,16 @@ export default function Inquiry_Master() {
     })
     const emptyarr = [
         {
-            id: "",
+            id:"",
             AvailabilityFrom: "",
             AvailabilityTo: "",
             DisplayRatePM: "",
             DrpmRate: "",
             Height: "",
             Illumination: "",
-            State: "",
-            District: "",
-            Subdistrict: "",
+            State:"",
+            District:"",
+            Subdistrict:"",
             Location: "",
             Media_Type: "",
             NoofDisplay: "",
@@ -816,7 +792,7 @@ export default function Inquiry_Master() {
             Total: "",
             Totalsqft: "",
             Width: "",
-            media_type_master: {
+            media_type_master:{
                 id: "",
                 media_type: ""
             },
@@ -824,21 +800,25 @@ export default function Inquiry_Master() {
     ]
     var rows1 = emptyarr;
     //console.log(data);
-    if (illumination === "ALL") {
-        if (invData.data) {
-            rows1 = invData.data.Inventory_Master;
+    if(illumination==="ALL")
+    {
+        if(invData.data)
+        {
+        rows1=invData.data.Inventory_Master;
         }
     }
-    else {
-        if (data) {
-            rows1 = data.Inventory_Master;
+    else
+    {
+        if(data)
+        {
+        rows1=data.Inventory_Master;
         }
     }
-
+    
 
     return (
         <div>
-
+            
             <Card variant="outlined" className="form-card" style={{
                 margin: "2%",
                 padding: "2%",
@@ -886,7 +866,7 @@ export default function Inquiry_Master() {
                                 </div>
                                 <div className="field col-md-6">
                                     <label className="required">Location</label>
-
+                                  
                                     <select onChange={onModalLocationChange} className="form-control" defaultValue={modalLocation}>
                                         <option>Select...</option>
                                         {read_inventory.data.Inventory_Master.map((inventory) => (
@@ -898,11 +878,11 @@ export default function Inquiry_Master() {
                                     <label className="required">Date</label>
                                     <input type="date" readonly defaultValue={modalStartDate} onChange={onModalStartDateChange} className="form-control mt-1" required />
                                 </div>
-
+                                
                             </div>
-
+                            
                             <div className="row">
-
+                               
                                 <div className="field col-md-6">
                                     <label>Media Type</label>
                                     <select defaultValue={modalMedia_type} className="form-control" onChange={onModalMediaChange}>
@@ -925,7 +905,7 @@ export default function Inquiry_Master() {
                             </div>
                             <br />
                             <div className="field">
-                                <button className="btn btn-primary" style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Save</button>
+                                <button className="btn btn-primary" style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Save</button>
                             </div>
                         </form>
 
@@ -937,8 +917,8 @@ export default function Inquiry_Master() {
                     </Modal.Footer>
                 </Modal>
 
-                <form className="form-group" padding="2px">
-                    <h4 className="text-center">INQUIRY MASTER</h4>
+                <form  className="form-group" padding="2px">
+                <h4 className="text-center">INQUIRY MASTER</h4>
                     <div className="row">
                         <div className="field col-md-6">
                             <label className="required">Source Of Lead</label>
@@ -969,7 +949,7 @@ export default function Inquiry_Master() {
                             <input placeholder="enter start date" type="date" name="start_date" onChange={onStartDateChange} className="form-control mt-1" title="Please enter start date" />
                         </div>
                     </div><br />
-
+                    
                     <div className="row">
                         <div className="field col-md-6">
                             <label className="required">Media Type</label>
@@ -990,7 +970,7 @@ export default function Inquiry_Master() {
                             </select>
                         </div>
                     </div>
-
+                    
                 </form>
             </Card>
             <Card variant="outlined" className="form-card" style={{
@@ -1000,15 +980,13 @@ export default function Inquiry_Master() {
                 boxShadow: "2px 2px 37px rgba(0, 0, 0, 0.25)",
                 borderRadius: "10px"
             }}><form className="form-group">
-
+                    
                     <div className="row">
                         <div className="field col-md-4">
                             <label className="required">State</label>
                             <Select
                                 name="state"
-                                options={
-                                    read_states.data.geo_locations.filter((states) => states.location_type.includes("STATE"))
-                                }
+                                options={read_states.data.geo_locations}
                                 onChange={onStateChange}
                                 getOptionLabel={(option) => option.name}
                                 getOptionValue={(option) => option.id}
@@ -1018,13 +996,7 @@ export default function Inquiry_Master() {
                             <label className="required">District</label>
                             <Select
                                 name="district"
-                                options={read_states.data.geo_locations.filter(function (currentElement) {
-                                    if (currentElement.location_type === "DISTRICT" && currentElement.parent_id === state) {
-                                        //console.log(currentElement);
-                                        return currentElement;
-                                    }
-                                }
-                                )}
+                                options={read_states.data.geo_locations}
                                 onChange={onDistrictChange}
                                 getOptionLabel={(option) => option.name}
                                 getOptionValue={(option) => option.id}
@@ -1034,13 +1006,7 @@ export default function Inquiry_Master() {
                             <label className="required">Subdistrict</label>
                             <Select
                                 name="subdistrict"
-                                options={read_states.data.geo_locations.filter(function (currentElement) {
-                                    if (currentElement.location_type === "SUBDISTRICT" && currentElement.parent_id === district) {
-                                        //console.log(currentElement);
-                                        return currentElement;
-                                    }
-                                }
-                                )}
+                                options={read_states.data.geo_locations}
                                 onChange={onSubdistrictChange}
                                 getOptionLabel={(option) => option.name}
                                 getOptionValue={(option) => option.id}
@@ -1070,10 +1036,10 @@ export default function Inquiry_Master() {
                             <label>Date</label>
                             <input type="date" className="form-control" onChange={onDateChange} />
                         </div>
-
+                        
                     </div><br />
                     <div className="field" style={{ width: '100%', textAlign: 'center', marginTop: '40px' }}>
-                        <button onClick={onSearch} className="btn btn-primary" type='submit' style={{ marginRight: '50px', width: '21%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Search</button>
+                        <button onClick={onSearch} className="btn btn-primary" type='submit' style={{ marginRight: '50px', width:'21%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Search</button>
                     </div>
                     <br />
                 </form>
@@ -1086,17 +1052,17 @@ export default function Inquiry_Master() {
                         components={{
                             Toolbar: GridToolbar,
                         }}
-                        checkboxSelection
+                        checkboxSelection     
                         onSelectionModelChange={itm => setSelected(itm)}
                     />
                     <div className="field" style={{ width: '100%', textAlign: 'center', marginTop: '40px' }}>
-                        <button onClick={onFormSubmit} className="btn btn-primary" type='submit' style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Save</button>
-                        <button className="btn btn-primary" type="reset" style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Reset</button>
+                        <button onClick={onFormSubmit} className="btn btn-primary" type='submit'style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Save</button>
+                        <button className="btn btn-primary" type="reset"style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Reset</button>
                         <br />
                         <br />
                     </div>
                 </div>
-
+                
             </Card>
             <Card variant="outlined" className="form-card" style={{
                 margin: "2%",
