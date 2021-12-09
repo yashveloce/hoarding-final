@@ -144,8 +144,8 @@ function Hoarding_Insurance() {
     const [delete_insurance] = useMutation(DELETE_INSURANCE);
     const read_inventory = useQuery(READ_INVENTORY);
     const read_insurance = useSubscription(READ_INSURANCE);
-    const [get_inventory,ret_data] = useLazyQuery(GET_INVENTORY);
-    if (read_inventory.loading || read_insurance.loading||ret_data.loading) {
+    //const [get_inventory,ret_data] = useLazyQuery(GET_INVENTORY);
+    if (read_inventory.loading || read_insurance.loading) {
         return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
     }
     //Events
