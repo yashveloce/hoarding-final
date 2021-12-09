@@ -288,7 +288,7 @@ function Hoarding_Insurance() {
     rows.map((item,index)=>{
         newData.push({sno:index+1,...item})
     }) 
-    get_inventory({variables:{hoarding_insurance_to:(new Date()).toISOString().split('T')[0]}})
+   // get_inventory({variables:{hoarding_insurance_to:(new Date()).toISOString().split('T')[0]}})
     //console.log((new Date()).toISOString().split('T')[0]);
     return (
         <div>
