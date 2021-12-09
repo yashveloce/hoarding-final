@@ -78,7 +78,7 @@ mutation MyMutation($isDeleted: String = "true", $id: Int = 0) {
     }
   }  
 `
-const Read_Labour_Master=gql`
+const Read_Labour_Master = gql`
 query MyQuery($_eq: String = "false"){
     labour_category_master(where: {isDeleted: {_eq: $_eq}}){
       id
@@ -89,11 +89,11 @@ query MyQuery($_eq: String = "false"){
 `
 
 export default function Employee_Master() {
-   
+
     const [showModal, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    
+
     const [employee, setEmployee] = useState({
         name: '',
         address: '',
@@ -103,7 +103,7 @@ export default function Employee_Master() {
         branch_name: '',
         ifsc_code: '',
         account_no: '',
-        labour_category:''
+        labour_category: ''
     });
     const [modalEmployee, setModalEmployee] = useState({
         id: '',
@@ -115,20 +115,20 @@ export default function Employee_Master() {
         branch_name: '',
         ifsc_code: '',
         account_no: '',
-        labour_category:''
+        labour_category: ''
     });
     const [insert_employee, insert_data] = useMutation(INSERT_EMPLOYEE);
     const [update_employee, update_data] = useMutation(UPDATE_EMPLOYEE);
     const [delete_employee, delete_data] = useMutation(DELETE_EMPLOYEE);
     const bank_data = useQuery(GET_BANK);
-    const read_labour =useQuery(Read_Labour_Master);
+    const read_labour = useQuery(Read_Labour_Master);
     const employee_data = useSubscription(READ_EMPLOYEE);
-    if (bank_data.loading || employee_data.loading||read_labour.loading) {
+    if (bank_data.loading || employee_data.loading || read_labour.loading) {
         return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
     }
 
-    
-    
+
+
     const onInputChange = (e) => {
         //console.log(e.target.name);
         setEmployee({ ...employee, [e.target.name]: e.target.value })
@@ -136,7 +136,7 @@ export default function Employee_Master() {
     const onFormSubmit = (e) => {
         console.log(employee);
         e.preventDefault();
-        insert_employee({ variables: employee})
+        insert_employee({ variables: employee })
         toast.configure();
         toast.success('Successfully Inserted')
     }
@@ -152,7 +152,7 @@ export default function Employee_Master() {
             branch_name: row.branch_name,
             ifsc_code: row.ifsc_code,
             account_no: row.account_no,
-            labour_category:row.labour_category
+            labour_category: row.labour_category
         })
         console.log(modalEmployee);
     }
@@ -250,7 +250,7 @@ export default function Employee_Master() {
             renderCell: (params) => {
                 return (
                     <div className="">
-                        <button onClick={() => onEdit(params.row)} data-toggle="tooltip" title="Edit" style={{ marginLeft: '5%' }}  type="button" className="btn btn-warning"  ><i className="bi bi-pencil-fill"></i></button>
+                        <button onClick={() => onEdit(params.row)} data-toggle="tooltip" title="Edit" style={{ marginLeft: '5%' }} type="button" className="btn btn-warning"  ><i className="bi bi-pencil-fill"></i></button>
                         <button onClick={() => {
                             const confirmBox = window.confirm(
                                 "Do you really want to delete?"
@@ -266,9 +266,9 @@ export default function Employee_Master() {
     ];
     console.log(employee_data.data.employee_master);
     const rows = employee_data.data.employee_master;
-    let newData=[]
-    rows.map((item,index)=>{
-        newData.push({sno:index+1,...item})
+    let newData = []
+    rows.map((item, index) => {
+        newData.push({ sno: index + 1, ...item })
     })
     return (
         <div>
@@ -299,21 +299,17 @@ export default function Employee_Master() {
                                 <input defaultValue={modalEmployee.contact_no} onChange={onModalInputChange} className="form-control mt-1" name="contact_no" type="tel" placeholder="enter contact number" pattern="[789][0-9]{9}" title="Please enter valid contact number" />
                             </div>
                         </div>
-                        <div className="row">
-                        <div className="field col-md-6">
-                                            <label className="required">Labour Category</label>
-                                            <select defaultValue={modalEmployee.labour_category} onChange={onInputChange}  type="text" name="labour_category" className="form-control mt-1" placeholder="enter labour category" required>
-                                <option>--SELECT--</option>
-                                {read_labour.data.labour_category_master.map(Labour_Category => (
-                                    <option key={Labour_Category.id} value={Labour_Category.id}>{Labour_Category.labour_category}</option>
-                                ))}
-                                {/* <option>Printer</option>
-                                <option>Mounter</option>
-                                <option>Electrician</option>
-                                <option>Fabricator</option> */}
-                            </select>
-                                        </div>
-                                        </div>
+                        {/* <div className="row">
+                            <div className="field col-md-6">
+                                <label className="required">Labour Category</label>
+                                <select defaultValue={modalEmployee.labour_category} onChange={onInputChange} type="text" name="labour_category" className="form-control mt-1" placeholder="enter labour category" required>
+                                    <option>--SELECT--</option>
+                                    {read_labour.data.labour_category_master.map(Labour_Category => (
+                                        <option key={Labour_Category.id} value={Labour_Category.id}>{Labour_Category.labour_category}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div> */}
                         <div className="row">
                             <div className="field col-md-6">
                                 <label className="required">Email ID</label>
@@ -347,7 +343,7 @@ export default function Employee_Master() {
                             </div>
                         </div><br />
                         <div className="field col-md-6">
-                            <button className="btn btn-primary" style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Save</button>
+                            <button className="btn btn-primary" style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Save</button>
                         </div>
 
                     </form>
@@ -366,10 +362,10 @@ export default function Employee_Master() {
                 boxShadow: "2px 2px 37px rgba(0, 0, 0, 0.25)",
                 borderRadius: "10px"
             }}>
-           
-                <br/>
+
+                <br />
                 <h4 className="text-center">EMPLOYEE MASTER</h4>
-<br/>
+                <br />
                 <form onSubmit={onFormSubmit} className="form-group" padding="2px">
                     <div className="row">
                         <div className="field col-md-6">
@@ -391,21 +387,17 @@ export default function Employee_Master() {
                             <input type="email" name="email_id" onChange={onInputChange} className="form-control mt-1" placeholder="enter email id" pattern="^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$" title="Please enter valid email address" required />
                         </div>
                     </div><br />
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="field col-md-6">
-                                            <label className="required">Labour Category</label>
-                                            <select onChange={onInputChange}  type="text" name="labour_category" className="form-control mt-1" placeholder="enter labour category" required>
+                            <label className="required">Labour Category</label>
+                            <select onChange={onInputChange} type="text" name="labour_category" className="form-control mt-1" placeholder="enter labour category" required>
                                 <option>--SELECT--</option>
                                 {read_labour.data.labour_category_master.map(Labour_Category => (
                                     <option key={Labour_Category.id} value={Labour_Category.id}>{Labour_Category.labour_category}</option>
                                 ))}
-                                {/* <option>Printer</option>
-                                <option>Mounter</option>
-                                <option>Electrician</option>
-                                <option>Fabricator</option> */}
                             </select>
-                                        </div>
-                                        </div><br />
+                        </div>
+                    </div><br /> */}
                     <div className="row">
                         <div className="field col-md-6">
                             <label className="required">Bank Name</label>
@@ -433,8 +425,8 @@ export default function Employee_Master() {
                         </div>
                     </div>
                     <div className="field" style={{ width: '100%', textAlign: 'center', marginTop: '20px' }}>
-                        <button className="btn btn-primary" type='submit' style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Save</button>
-                        <button className="btn btn-primary" type='reset' style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Reset</button>
+                        <button className="btn btn-primary" type='submit' style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Save</button>
+                        <button className="btn btn-primary" type='reset' style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Reset</button>
                         {/* <button className="btn btn-primary" type='Next' style={{marginLeft:'5%'}}>Next</button> */}
                     </div>
                 </form>
@@ -456,7 +448,7 @@ export default function Employee_Master() {
                         disableSelectiononChange
                         components={{
                             Toolbar: GridToolbar,
-                          }}
+                        }}
                     />
                 </div>
             </Card>

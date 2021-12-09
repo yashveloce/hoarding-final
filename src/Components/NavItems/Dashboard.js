@@ -8,6 +8,42 @@ import { Modal, Button } from "react-bootstrap";
 import Select from 'react-select'
 import { CSVLink, CSVDownload } from "react-csv";
 
+const GET_INVENTORY = gql`
+query MyQuery($hoarding_insurance_to:date!){
+    Inventory_Master(where: {hoarding_insurance_to: {_eq: $hoarding_insurance_to}}){
+      AvailabilityFrom
+      AvailabilityTo
+      State
+      District
+      Subdistrict
+      DisplayRatePM
+      
+      DrpmRate
+      Height
+      Illumination
+      Location
+      Media_Type
+      NoofDisplay
+      OneTimeMountingCost
+      OneTimePrintingCost
+      OtmcRate
+      OtpcRate
+      
+      Total
+      Totalsqft
+      Width
+      
+      hoarding_insurance
+      id
+      media_type_master {
+        id
+        media_type
+      }
+      
+    }
+  }
+`
+
 const READ_INVENTORY = gql`
 query MyQuery {
     Inventory_Master {
@@ -108,7 +144,8 @@ function Hoarding_Insurance() {
     const [delete_insurance] = useMutation(DELETE_INSURANCE);
     const read_inventory = useQuery(READ_INVENTORY);
     const read_insurance = useSubscription(READ_INSURANCE);
-    if (read_inventory.loading || read_insurance.loading) {
+    const [get_inventory,ret_data] = useLazyQuery(GET_INVENTORY);
+    if (read_inventory.loading || read_insurance.loading||ret_data.loading) {
         return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
     }
     //Events
@@ -250,7 +287,9 @@ function Hoarding_Insurance() {
     let newData=[]
     rows.map((item,index)=>{
         newData.push({sno:index+1,...item})
-    })
+    }) 
+    get_inventory({variables:{hoarding_insurance_to:(new Date()).toISOString().split('T')[0]}})
+    //console.log((new Date()).toISOString().split('T')[0]);
     return (
         <div>
             <Modal show={showModal} onHide={handleClose}>
