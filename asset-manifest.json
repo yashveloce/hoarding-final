@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/hoarding-final/static/css/main.b23e0267.chunk.css",
-    "main.js": "/hoarding-final/static/js/main.d31e2d40.chunk.js",
-    "main.js.map": "/hoarding-final/static/js/main.d31e2d40.chunk.js.map",
+    "main.js": "/hoarding-final/static/js/main.94c64f99.chunk.js",
+    "main.js.map": "/hoarding-final/static/js/main.94c64f99.chunk.js.map",
     "runtime-main.js": "/hoarding-final/static/js/runtime-main.9f0ffa29.js",
     "runtime-main.js.map": "/hoarding-final/static/js/runtime-main.9f0ffa29.js.map",
     "static/css/2.017ad099.chunk.css": "/hoarding-final/static/css/2.017ad099.chunk.css",
@@ -21,6 +21,6 @@
     "static/css/2.017ad099.chunk.css",
     "static/js/2.4a0ce842.chunk.js",
     "static/css/main.b23e0267.chunk.css",
-    "static/js/main.d31e2d40.chunk.js"
+    "static/js/main.94c64f99.chunk.js"
   ]
 }
