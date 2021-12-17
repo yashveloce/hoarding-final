@@ -8,30 +8,57 @@ import { Modal, Button } from "react-bootstrap";
 import Select from 'react-select'
 
 const INSERT_CUSTOMER = gql`
-mutation MyMutation( $contact_person: String = "", $email_id: String = "", $gst_no: String = "", $mobile_no: String = "", $name: String = "", $pan: String = "", $res_address: String = "") {
-    insert_customer_master_one(object: {contact_person: $contact_person, email_id: $email_id, gst_no: $gst_no, mobile_no: $mobile_no, name: $name, pan: $pan, res_address: $res_address}) {
+mutation MyMutation( $contact_person: String = "", $email_id: String = "", $gst_no: String = "", $mobile_no: String = "", $name: String = "", $pan: String = "", $res_address: String = "",$State:Int!,$District:Int!,$Subdistrict:Int!) {
+    insert_customer_master_one(object: {contact_person: $contact_person, email_id: $email_id, gst_no: $gst_no, mobile_no: $mobile_no, name: $name, pan: $pan, res_address: $res_address,State:$State,District:$District,Subdistrict:$Subdistrict}) {
       id
     }
   }  
 `
 const READ_CUSTOMER = gql`
-subscription MySubscription($_eq: String = "false"){
-    customer_master(where: {isDeleted: {_eq: $_eq}}){ 
+subscription MySubscription($_eq: String = "false") {
+    customer_master(where: {isDeleted: {_eq: $_eq}}) {
+      District
+      State
+      Subdistrict
       contact_person
       email_id
       gst_no
       id
+      isDeleted
       mobile_no
       name
       pan
       res_address
+      geoLocationByState {
+        external_id
+        id
+        location_type
+        name
+        parent_id
+        pin
+      }
+      geoLocationBySubdistrict {
+        external_id
+        id
+        location_type
+        name
+        parent_id
+        pin
+      }
+      geo_location {
+        external_id
+        id
+        location_type
+        name
+        parent_id
+        pin
+      }
     }
-  }
-  
+  }  
 `
 const UPDATE_CUSTOMER = gql`
-mutation MyMutation($id: Int = 10, $contact_person: String = "",  $email_id: String = "", $gst_no: String = "", $mobile_no: String = "", $name: String = "", $pan: String = "", $res_address: String = "") {
-    update_customer_master_by_pk(pk_columns: {id: $id}, _set: {cities: $cities, contact_person: $contact_person, email_id: $email_id, gst_no: $gst_no, mobile_no: $mobile_no, name: $name, pan: $pan, res_address: $res_address}) {
+mutation MyMutation($id: Int = 10, $contact_person: String = "",  $email_id: String = "", $gst_no: String = "", $mobile_no: String = "", $name: String = "", $pan: String = "", $res_address: String = "",$State:Int!,$District:Int!,$Subdistrict:Int!) {
+    update_customer_master_by_pk(pk_columns: {id: $id}, _set: {cities: $cities, contact_person: $contact_person, email_id: $email_id, gst_no: $gst_no, mobile_no: $mobile_no, name: $name, pan: $pan, res_address: $res_address,State:$State,District:$District,Subdistrict:$Subdistrict}) {
       id
     }
   }
@@ -44,7 +71,7 @@ mutation MyMutation($id: Int = 10, $contact_person: String = "",  $email_id: Str
 //       id
 //     }
 //   }
-  
+
 // `
 
 const DELETE_CUSTOMER = gql`
@@ -53,41 +80,19 @@ mutation MyMutation($isDeleted: String = "", $id: Int = 0) {
       id
     }
   }
-  
 `
-const READ_LOCATION = gql`
+const READ_GEOLOCATIONS = gql`
 query MyQuery {
-    location_master{
-      city
-      country
+    geo_locations {
+      external_id
       id
-      state
-      taluka
-      district
-      cityByCity {
-        id
-        name
-        state_id
-      }
-      countryByCountry {
-        id
-        name
-        phonecode
-        sortname
-      }
-      stateByState {
-        country_id
-        id
-        name
-      }
+      location_type
+      name
+      parent_id
+      pin
     }
   }  
 `
-
-
-
-
-
 
 export default function Customer_Master() {
     const [customValidity, setCustomValidity] = useState();
@@ -102,7 +107,9 @@ export default function Customer_Master() {
     const [gst_no, setGst_no] = useState();
     const [pan, setPan] = useState();
     const [res_address, setRes_address] = useState();
-    
+    const [state, setState] = useState();
+    const [district, setDistrict] = useState();
+    const [subdistrict, setSubdistrict] = useState();
 
     const [modalId, setModalId] = useState();
     const [modalName, setModalName] = useState();
@@ -112,15 +119,18 @@ export default function Customer_Master() {
     const [modalGst_no, setModalGst_no] = useState();
     const [modalPan, setModalPan] = useState();
     const [modalRes_address, setModalRes_address] = useState();
-    
+    const [modalState, setModalState] = useState();
+    const [modalDistrict, setModalDistrict] = useState();
+    const [modalSubdistrict, setModalSubdistrict] = useState();
 
     //Queries
     const [insert_customer] = useMutation(INSERT_CUSTOMER);
     const [update_customer] = useMutation(UPDATE_CUSTOMER);
     const [delete_customer] = useMutation(DELETE_CUSTOMER);
     const read_customer = useSubscription(READ_CUSTOMER);
+    const read_geolocations = useQuery(READ_GEOLOCATIONS);
     //Loader
-    if (read_customer.loading) return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
+    if (read_customer.loading||read_geolocations.loading) return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
 
     // const onInputChange = (e) => {
     //     setCustomer({ ...customer, [e.target.name]: e.target.value });
@@ -143,9 +153,18 @@ export default function Customer_Master() {
     const onPanChange = (e) => {
         setPan(e.target.value);
     }
-    
+
     const onRes_addressChange = (e) => {
         setRes_address(e.target.value);
+    }
+    const onStateChange = (state_data) => {
+        setState(state_data.id);
+    }
+    const onDistrictChange = (district_data) => {
+        setDistrict(district_data.id);
+    }
+    const onSubdistrictChange = (subdistrict_data) => {
+        setSubdistrict(subdistrict_data.id);
     }
     //Modal Form Data
     const onModalIdChange = (e) => {
@@ -169,15 +188,24 @@ export default function Customer_Master() {
     const onModalPanChange = (e) => {
         setModalPan(e.target.value);
     }
-    
+
     const onModalRes_addressChange = (e) => {
         setModalRes_address(e.target.value);
+    }
+    const onModalStateChange = (e) => {
+        setModalState(e.target.value);
+    }
+    const onModalDistrictChange = (e) => {
+        setModalDistrict(e.target.value);
+    }
+    const onModalSubdistrictChange = (e) => {
+        setModalSubdistrict(e.target.value);
     }
 
     const onFormSubmit = (e) => {
         e.preventDefault();
         //console.log(customer);
-        insert_customer({ variables: { name: name, res_address: res_address, contact_person: contact_person, mobile_no: mobile_no, email_id: email_id, gst_no: gst_no, pan: pan } })
+        insert_customer({ variables: { name: name, res_address: res_address, contact_person: contact_person, mobile_no: mobile_no, email_id: email_id, gst_no: gst_no, pan: pan, State: state, District: district, Subdistrict: subdistrict } })
         toast.configure();
         toast.success('Successfully Inserted')
     }
@@ -191,13 +219,16 @@ export default function Customer_Master() {
         setModalGst_no(row.gst_no)
         setModalPan(row.pan)
         setModalRes_address(row.res_address)
+        setModalState(row.State)
+        setModalDistrict(row.District)
+        setModalSubdistrict(row.Subdistrict)
     }
     // const onModalInputChange = (e) => {
     //     setModalCustomer({ ...modalCustomer, [e.target.name]: e.target.value })
     // }
     const onModalFormSubmit = (e) => {
         e.preventDefault();
-        update_customer({ variables: { id: modalId, name: modalName, res_address: modalRes_address, contact_person: modalContact_person, mobile_no: modalMobile_no, email_id: modalEmail_id, gst_no: modalGst_no, pan: modalPan } })
+        update_customer({ variables: { id: modalId, name: modalName, res_address: modalRes_address, contact_person: modalContact_person, mobile_no: modalMobile_no, email_id: modalEmail_id, gst_no: modalGst_no, pan: modalPan, State: modalState, District: modalDistrict, Subdistrict: modalSubdistrict } })
         handleClose();
         toast.configure();
         toast.warning('Successfully Updated')
@@ -223,7 +254,7 @@ export default function Customer_Master() {
             headerName: 'Name',
             width: 160
         },
-        
+
         {
             field: 'mobile_no',
             headerName: 'Mobile Number',
@@ -250,6 +281,21 @@ export default function Customer_Master() {
             width: 160
         },
         {
+            field: 'State',
+            headerName: 'State',
+            width: 160
+        },
+        {
+            field: 'District',
+            headerName: 'District',
+            width: 160
+        },
+        {
+            field: 'Subdistrict',
+            headerName: 'Subdistrict',
+            width: 160
+        },
+        {
             field: 'action',
             headerName: 'Action',
             width: 200,
@@ -271,9 +317,9 @@ export default function Customer_Master() {
         },
     ];
     const rows = read_customer.data.customer_master;
-    let newData=[]
-    rows.map((item,index)=>{
-        newData.push({sno:index+1,...item})
+    let newData = []
+    rows.map((item, index) => {
+        newData.push({ sno: index + 1, ...item })
     })
     //console.log(rows);
     return (
@@ -322,7 +368,65 @@ export default function Customer_Master() {
                             </div>
                         </div>
                         <div className="row">
-                            
+
+                            <div className="field col-md-6">
+                                <label className="required">State</label>
+                                {/* <Select
+                                    name="state"
+                                    defaultValue={modalState}
+                                    options={
+                                        read_geolocations.data.geo_locations.filter((states) => states.location_type.includes("STATE"))
+                                    }
+                                    onChange={onModalStateChange}
+                                    getOptionLabel={(option) => option.name}
+                                    getOptionValue={(option) => option.id}
+                                /> */}
+                                <select className='form-control' name="state" defaultValue={modalState} onChange={onModalStateChange}>
+                                    <option>Select...</option>
+                                    {
+                                        read_geolocations.data.geo_locations.filter((states) => states.location_type.includes("STATE")).map((state)=>(
+                                            <option key={state.id} value={state.id}>{state.name}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
+                            <div className="field col-md-6">
+                                <label className="required">District</label>
+                                {/* <Select
+                                    name="district"
+                                    options={read_geolocations.data.geo_locations.filter(function (currentElement) {
+                                        if (currentElement.location_type === "DISTRICT" && currentElement.parent_id === state) {
+                                            //console.log(currentElement);
+                                            return currentElement;
+                                        }
+                                    }
+                                    )}
+                                    onChange={onModalDistrictChange}
+                                    getOptionLabel={(option) => option.name}
+                                    getOptionValue={(option) => option.id}
+                                /> */}
+                                <select className='form-control' defaultValue={modalDistrict} name="district" onChange={onModalDistrictChange}>
+                                    <option>Select...</option>
+                                    {
+                                        read_geolocations.data.geo_locations.filter((districts) => districts.location_type.includes("DISTRICT")).map((district)=>(
+                                            <option key={district.id} value={district.id}>{district.name}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="field col-md-6">
+                                <label className="required">Subdistrict</label>
+                                <select className='form-control' defaultValue={modalSubdistrict} name="subdistrict" onChange={onModalSubdistrictChange}>
+                                    <option>Select...</option>
+                                    {
+                                        read_geolocations.data.geo_locations.filter((subdistricts) => subdistricts.location_type.includes("DISTRICT")).map((subdistrict)=>(
+                                            <option key={subdistrict.id} value={subdistrict.id}>{subdistrict.name}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
                             <div className="field col-md-6">
                                 <label className="required">Resident Address</label>
                                 <input defaultValue={modalRes_address} onChange={onModalRes_addressChange} className="form-control" name="res_address" type="text" />
@@ -330,7 +434,7 @@ export default function Customer_Master() {
                         </div>
                         <br />
                         <div className="field">
-                            <button className="btn btn-primary"style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Save</button>
+                            <button className="btn btn-primary" style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Save</button>
                         </div>
                     </form>
 
@@ -382,7 +486,53 @@ export default function Customer_Master() {
                             <input onChange={onPanChange} placeholder="enter pan number" type="text" name="pan" className="form-control mt-1" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" title="Please enter valid pan" required />
                         </div>
                     </div><br />
-                    {/* <h5 style={{ textAlign: 'center' }}>Address</h5> */}
+                    <h5 style={{ textAlign: 'center' }}>Address</h5>
+                    <div className='row'>
+                        <div className="field col-md-4">
+                            <label className="required">State</label>
+                            <Select
+                                name="state"
+                                options={
+                                    read_geolocations.data.geo_locations.filter((states) => states.location_type.includes("STATE"))
+                                }
+                                onChange={onStateChange}
+                                getOptionLabel={(option) => option.name}
+                                getOptionValue={(option) => option.id}
+                            />
+                        </div>
+                        <div className="field col-md-4">
+                            <label className="required">District</label>
+                            <Select
+                                name="district"
+                                options={read_geolocations.data.geo_locations.filter(function (currentElement) {
+                                    if (currentElement.location_type === "DISTRICT" && currentElement.parent_id === state) {
+                                        //console.log(currentElement);
+                                        return currentElement;
+                                    }
+                                }
+                                )}
+                                onChange={onDistrictChange}
+                                getOptionLabel={(option) => option.name}
+                                getOptionValue={(option) => option.id}
+                            />
+                        </div>
+                        <div className="field col-md-4">
+                            <label className="required">Subdistrict</label>
+                            <Select
+                                name="subdistrict"
+                                options={read_geolocations.data.geo_locations.filter(function (currentElement) {
+                                    if (currentElement.location_type === "SUBDISTRICT" && currentElement.parent_id === district) {
+                                        //console.log(currentElement);
+                                        return currentElement;
+                                    }
+                                }
+                                )}
+                                onChange={onSubdistrictChange}
+                                getOptionLabel={(option) => option.name}
+                                getOptionValue={(option) => option.id}
+                            />
+                        </div>
+                    </div>
                     {/* <div className="row">
                         <div className="field col-md-4">
                             <label className="required">Country</label>
@@ -418,18 +568,19 @@ export default function Customer_Master() {
                             />
                         </div>
                     </div><br /> */}
+                    <br />
                     <div className="row">
-                        
-                        <div className="field col-md-6">
+
+                        <div className="field col-md-4">
                             <label className="required">Residential Address</label>
-                            <input onChange={onRes_addressChange} type="text" name="res_address" className="form-control" placeholder="enter residential address"/>
+                            <input onChange={onRes_addressChange} type="text" name="res_address" className="form-control" placeholder="enter residential address" />
                         </div>
                     </div><br />
                     <br />
                     <div className="field" style={{ width: '100%', textAlign: 'center', marginTop: '40px' }}>
-                        <button className="btn btn-primary" type='submit'style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Save</button>
+                        <button className="btn btn-primary" type='submit' style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Save</button>
 
-                        <button className="btn btn-primary" type="reset"style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Reset</button>
+                        <button className="btn btn-primary" type="reset" style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Reset</button>
                         <br />
                         <br />
 
@@ -447,7 +598,7 @@ export default function Customer_Master() {
 
                 <div style={{ height: 500, width: '100%' }}>
                     <DataGrid
-                        rows={newData} 
+                        rows={newData}
                         columns={columns}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
@@ -455,7 +606,7 @@ export default function Customer_Master() {
                         disableSelectiononChange
                         components={{
                             Toolbar: GridToolbar,
-                          }}
+                        }}
                     />
                 </div>
             </Card>

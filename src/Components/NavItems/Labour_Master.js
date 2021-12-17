@@ -68,7 +68,7 @@ mutation MyMutation($id: Int = 0, $isDeleted: String = "true") {
   }   
 `
 
-const Read_Labour_Master=gql`
+const Read_Labour_Master = gql`
 subscription MySubscription($_eq: String = "false"){
     labour_category_master(where: {isDeleted: {_eq: $_eq}}){
       id
@@ -113,7 +113,7 @@ export default function Labour_Master() {
         ifsc_code: '',
         branch_name: '',
     })
-   
+
 
 
 
@@ -125,22 +125,22 @@ export default function Labour_Master() {
     const [deleteLabourMaster] = useMutation(LABOUR_MASTER_Delete);
 
 
-    const read_labour =useSubscription(Read_Labour_Master);
+    const read_labour = useSubscription(Read_Labour_Master);
 
 
-    if (Datatable.loading||read_labour.loading) {
+    if (Datatable.loading || read_labour.loading) {
         return (
             <div className='App' style={{ marginTop: '20%', }}><CircularProgress /></div>
         )
     }
     if (Datatable.error) {
-        return "Error"+Datatable.error;
+        return "Error" + Datatable.error;
     }
     //const rows = Datatable.data.labor_master;
     const rows = Datatable.data.labor_master;
-    let newData=[]
-    rows.map((item,index)=>{
-        newData.push({sno:index+1,...item})
+    let newData = []
+    rows.map((item, index) => {
+        newData.push({ sno: index + 1, ...item })
     })
 
     const onInputChange = (e) => {
@@ -193,10 +193,10 @@ export default function Labour_Master() {
 
     const deleteVehicle = (id) => {
         console.log(id);
-        deleteLabourMaster({variables: {id: id}})
+        deleteLabourMaster({ variables: { id: id } })
         toast.configure();
         toast.error('Successfully Deleted')
-    }   
+    }
 
     const columns = [
         {
@@ -298,7 +298,7 @@ export default function Labour_Master() {
                                 "Do you really want to delete?"
                             )
                             if (confirmBox === true) {
-                                console.log("----"+params.row.id);
+                                console.log("----" + params.row.id);
                                 deleteVehicle(params.row.id)
                             }
                         }}><i className="bi bi-trash-fill"></i></button>
@@ -308,7 +308,7 @@ export default function Labour_Master() {
         },
     ];
 
-    
+
 
     return (
         <>
@@ -323,12 +323,12 @@ export default function Labour_Master() {
                                 <div className="row">
                                     <div className="field col-md-6">
                                         <label className="required">Labour_Category</label>
-                                        <select placeholder="enter labour category" onChange={onModalInputChange} defaultValue={updateLabor.labor_type} type="text" name="labor_type" className="form-control mt-1" placeholder="enter labour category" required>
-                                <option>--SELECT--</option>
-                                {read_labour.data.labour_category_master.map(Labour_Category => (
-                                    <option key={Labour_Category.id} value={Labour_Category.id}>{Labour_Category.labour_category}</option>
-                                ))}
-                            </select>
+                                        <select placeholder="enter labour category" onChange={onModalInputChange} defaultValue={updateLabor.labor_type} type="text" name="labor_type" className="form-control mt-1" placeholder="enter labour category"  required="required">
+                                            <option>--SELECT--</option>
+                                            {read_labour.data.labour_category_master.map(Labour_Category => (
+                                                <option key={Labour_Category.id} value={Labour_Category.id}>{Labour_Category.labour_category}</option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div className="field col-md-6">
                                         <label className="required">Name</label>
@@ -339,11 +339,11 @@ export default function Labour_Master() {
                                     <div className="field col-md-6">
                                         <label className="required">Contact Number</label>
                                         <div style={{ display: 'flex' }}>
-                                            <input placeholder="enter contact number" defaultValue={updateLabor.mobile_no} className="form-control mt-1" name="mobile_no" type="tel" onChange={onModalInputChange} required  pattern="[789][0-9]{9}" title="Please enter valid mobile no"/>
+                                            <input placeholder="enter contact number" defaultValue={updateLabor.mobile_no} className="form-control mt-1" name="mobile_no" type="tel" onChange={onModalInputChange} required pattern="[789][0-9]{9}" title="Please enter valid mobile no" />
                                             {/* <button className="btn btn-primary" style={{ margin: '0 20px' }} type='button'>Get OTP</button> */}
                                         </div>
                                     </div>
-                                
+
                                     <div className="field col-md-6">
                                         <label className="required">GST Number</label>
                                         <input defaultValue={updateLabor.gst_no} className="form-control mt-1" name="gst_no" placeholder="enter gst number" type="text" onChange={onModalInputChange} required />
@@ -386,8 +386,8 @@ export default function Labour_Master() {
                                 </div> */}
                                 <br />
                                 {/* <div className="field" style={{ width: '100%', textAlign: 'center', marginTop: '20px' }}> */}
-                                    <button className="btn btn-primary" type='submit'style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Update</button>
-                                    {/* <button className="btn btn-primary" type='reset'>Reset</button> */}
+                                <button className="btn btn-primary" type='submit' style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Update</button>
+                                {/* <button className="btn btn-primary" type='reset'>Reset</button> */}
                                 {/* </div> */}
                             </form>
                         </div>
@@ -406,89 +406,89 @@ export default function Labour_Master() {
                     boxShadow: "2px 2px 37px rgba(0, 0, 0, 0.25)",
                     borderRadius: "10px"
                 }}>
-                    <br/>
-                            <h4 style={{ width: '100%', textAlign: 'center' }}>LABOUR MASTER</h4>
+                    <br />
+                    <h4 style={{ width: '100%', textAlign: 'center' }}>LABOUR MASTER</h4>
 
-                            <br/>
-                         
-                                <form className="form-group" onSubmit={onSubmit}>
-                                    <div className="row">
-                                        <div className="field col-md-4">
-                                            <label className="required">Labour Category</label>
-                                            <select onChange={onInputChange}  type="text" name="labor_type" className="form-control mt-1" placeholder="enter labour category" required>
-                                <option>--SELECT--</option>
-                                {read_labour.data.labour_category_master.map(Labour_Category => (
-                                    <option key={Labour_Category.id} value={Labour_Category.id}>{Labour_Category.labour_category}</option>
-                                ))}
-                            </select>
-                                        </div>
-                                        <div className="field col-md-4">
-                                            <label className="required">Name</label>
-                                            <input className="form-control mt-1" name="name" type="text"  onChange={onInputChange} placeholder="enter name" pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets."  required />
-                                        </div>
-                                        <div className="field col-md-4">
-                                            <label className="required">Contact Number</label>
-                                            <div style={{ display: 'flex' }}>
-                                                <input className="form-control mt-1" name="mobile_no" type="tel"  onChange={onInputChange} placeholder="enter contact number" required  pattern="[789][0-9]{9}" title="Please enter valid mobile no"/>
-                                                {/* <button className="btn btn-primary" style={{ margin: '0 20px' }} type='button'>Get OTP</button> */}
-                                            </div>
-                                        </div>
-                                    </div><br />
-                                    <div className="row mt-3">
-                                        <div className="field col-md-4">
-                                        <label className="required">GST Number</label>
-                            <input onChange={onInputChange} placeholder="enter gst number" type="text" name="gst_no" className="form-control mt-1" pattern="^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$" title="Please enter valid gst number" required />
-                                        </div>
-                                        {/* <div className="field col-md-6">
+                    <br />
+
+                    <form className="form-group" onSubmit={onSubmit}>
+                        <div className="row">
+                            <div className="field col-md-4">
+                                <label className="required">Labour Category</label>
+                                <select onChange={onInputChange} name="labor_type" className="form-control mt-1"  required>
+                                    <option value="">Select...</option>
+                                    {read_labour.data.labour_category_master.map(Labour_Category => (
+                                        <option key={Labour_Category.id} value={Labour_Category.id}>{Labour_Category.labour_category}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="field col-md-4">
+                                <label className="required">Name</label>
+                                <input className="form-control mt-1" name="name" type="text" onChange={onInputChange} placeholder="enter name" pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." required />
+                            </div>
+                            <div className="field col-md-4">
+                                <label className="required">Contact Number</label>
+                                <div style={{ display: 'flex' }}>
+                                    <input className="form-control mt-1" name="mobile_no" type="tel" onChange={onInputChange} placeholder="enter contact number" required pattern="[789][0-9]{9}" title="Please enter valid mobile no" />
+                                    {/* <button className="btn btn-primary" style={{ margin: '0 20px' }} type='button'>Get OTP</button> */}
+                                </div>
+                            </div>
+                        </div><br />
+                        <div className="row mt-3">
+                            <div className="field col-md-4">
+                                <label className="required">GST Number</label>
+                                <input onChange={onInputChange} placeholder="enter gst number" type="text" name="gst_no" className="form-control mt-1" pattern="^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$" title="Please enter valid gst number" required />
+                            </div>
+                            {/* <div className="field col-md-6">
                                         <label>Enter OTP</label>
                                         <input className="form-control" name="otp" type="text" placeholder='Please Enter Your OTP' />
                                     </div> */}
 
-                                        <div className="field col-md-4">
-                                        <label className="required">PAN Number</label>
-                            <input onChange={onInputChange} placeholder="enter pan number" type="text" name="pan" className="form-control mt-1" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" title="Please enter valid pan number" required />
-                                        </div>
-                                        <div className="field col-md-4 mb-4">
-                                            <label className="required">Address</label>
-                                            <input className="form-control mt-1" name="address" placeholder="enter address" type="text"  onChange={onInputChange} required />
-                                        </div>
+                            <div className="field col-md-4">
+                                <label className="required">PAN Number</label>
+                                <input onChange={onInputChange} placeholder="enter pan number" type="text" name="pan" className="form-control mt-1" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" title="Please enter valid pan number" required />
+                            </div>
+                            <div className="field col-md-4 mb-4">
+                                <label className="required">Address</label>
+                                <input className="form-control mt-1" name="address" placeholder="enter address" type="text" onChange={onInputChange} required />
+                            </div>
 
-                                    </div><br />
-                                    <h5 style={{ width: '100%', textAlign: 'center' }}>BANK DETAILS</h5>
-                                    <br/>
-                                    {/* <span style={{ fontSize: '25px', fontFamily: 'Open Sans, sans-serif', width: '100%', textAlign: 'center', marginTop: '30px' }}>BANK DETAILS</span> */}
-                                    <div className="row mt-3" >
-                                        <div className="field col-md-4">
-                                            <label className="required">Bank Name</label>
-                                            <input className="form-control mt-1" name="bank_name" type="text"  placeholder="enter bank name" pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." onChange={onInputChange} required />
-                                        </div>
-                                        <div className="field col-md-4">
-                                            <label className="required">Branch Name</label>
-                                            <input className="form-control mt-1" name="branch_name" type="text"  placeholder="enter branch name" pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." onChange={onInputChange} required />
-                                        </div>
-                                        <div className="field col-md-4">
-                                            <label className="required">IFSC</label>
-                                            <input className="form-control mt-1" maxlength="11" minlength="11" name="ifsc_code" type="text"placeholder="enter ifsc"  onChange={onInputChange} required />
-                                        </div>
-                                    </div>
-                                    <div className="row mt-3">
-                                        <div className="field col-md-4 mt-3">
-                                            
-                                            <label className="required">Account Number</label>
-                                            <input className="form-control mt-1" name="account_no" placeholder="enter account number" type="number"  onChange={onInputChange} required />
-                                        </div>
-                                    </div>
-                                    <div className="field" style={{ width: '100%', textAlign: 'center', marginTop: '40px' }}>
-                                        <button className="btn btn-primary" type='submit'style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Save</button>
+                        </div><br />
+                        <h5 style={{ width: '100%', textAlign: 'center' }}>BANK DETAILS</h5>
+                        <br />
+                        {/* <span style={{ fontSize: '25px', fontFamily: 'Open Sans, sans-serif', width: '100%', textAlign: 'center', marginTop: '30px' }}>BANK DETAILS</span> */}
+                        <div className="row mt-3" >
+                            <div className="field col-md-4">
+                                <label className="required">Bank Name</label>
+                                <input className="form-control mt-1" name="bank_name" type="text" placeholder="enter bank name" pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." onChange={onInputChange} required />
+                            </div>
+                            <div className="field col-md-4">
+                                <label className="required">Branch Name</label>
+                                <input className="form-control mt-1" name="branch_name" type="text" placeholder="enter branch name" pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." onChange={onInputChange} required />
+                            </div>
+                            <div className="field col-md-4">
+                                <label className="required">IFSC</label>
+                                <input className="form-control mt-1" maxlength="11" minlength="11" name="ifsc_code" type="text" placeholder="enter ifsc" onChange={onInputChange} required />
+                            </div>
+                        </div>
+                        <div className="row mt-3">
+                            <div className="field col-md-4 mt-3">
 
-                                        <button className="btn btn-primary" type='reset'style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Reset</button>
-                                        <br/>
-                                        <br/>
-                                       
-                                    </div>
-                                </form>
-                         
-                        
+                                <label className="required">Account Number</label>
+                                <input className="form-control mt-1" name="account_no" placeholder="enter account number" type="number" onChange={onInputChange} required />
+                            </div>
+                        </div>
+                        <div className="field" style={{ width: '100%', textAlign: 'center', marginTop: '40px' }}>
+                            <button className="btn btn-primary" type='submit' style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Save</button>
+
+                            <button className="btn btn-primary" type='reset' style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Reset</button>
+                            <br />
+                            <br />
+
+                        </div>
+                    </form>
+
+
                 </Card>
             </div>
             <Card variant="outlined" className="form-card" style={{

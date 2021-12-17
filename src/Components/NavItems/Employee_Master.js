@@ -18,15 +18,15 @@ query MyQuery {
   }  
 `
 const INSERT_EMPLOYEE = gql`
-mutation MyMutation($address: String = "", $contact_no: String = "", $email_id: String = "", $name: String = "",$bank_name:String!,$branch_name:String!,$ifsc_code:String!,$account_no:String!,$labour_category:Int!) {
-    insert_employee_master_one(object: {address: $address, contact_no: $contact_no, email_id: $email_id, name: $name,bank_name:$bank_name,branch_name:$branch_name,ifsc_code:$ifsc_code,account_no:$account_no,labour_category:$labour_category}) {
+mutation MyMutation($address: String = "", $contact_no: String = "", $email_id: String = "", $name: String = "",$bank_name:String!,$branch_name:String!,$ifsc_code:String!,$account_no:String!) {
+    insert_employee_master_one(object: {address: $address, contact_no: $contact_no, email_id: $email_id, name: $name,bank_name:$bank_name,branch_name:$branch_name,ifsc_code:$ifsc_code,account_no:$account_no}) {
       id
     }
   }
 `
 const UPDATE_EMPLOYEE = gql`
-mutation MyMutation($id: Int = 0, $address: String = "" $contact_no: String = "", $email_id: String = "", $name: String = "",$bank_name:String!,$branch_name:String!,$ifsc_code:String!,$account_no:String!,$labour_category:Int!) {
-    update_employee_master_by_pk(pk_columns: {id: $id}, _set: {address: $address, contact_no: $contact_no, email_id: $email_id, name: $name,bank_name:$bank_name,branch_name:$branch_name,ifsc_code:$ifsc_code,account_no:$account_no,labour_category:$labour_category}) {
+mutation MyMutation($id: Int = 0, $address: String = "" $contact_no: String = "", $email_id: String = "", $name: String = "",$bank_name:String!,$branch_name:String!,$ifsc_code:String!,$account_no:String!) {
+    update_employee_master_by_pk(pk_columns: {id: $id}, _set: {address: $address, contact_no: $contact_no, email_id: $email_id, name: $name,bank_name:$bank_name,branch_name:$branch_name,ifsc_code:$ifsc_code,account_no:$account_no}) {
       address
       bank_name
       branch_name
@@ -52,12 +52,6 @@ subscription MySubscription($_eq: String = "false"){
       id
       ifsc_code
       isDeleted
-      labour_category
-      labour_category_master {
-        isDeleted
-        labour_category
-        id
-      }
       name
     }
   }
@@ -103,7 +97,6 @@ export default function Employee_Master() {
         branch_name: '',
         ifsc_code: '',
         account_no: '',
-        labour_category: ''
     });
     const [modalEmployee, setModalEmployee] = useState({
         id: '',
@@ -115,7 +108,6 @@ export default function Employee_Master() {
         branch_name: '',
         ifsc_code: '',
         account_no: '',
-        labour_category: ''
     });
     const [insert_employee, insert_data] = useMutation(INSERT_EMPLOYEE);
     const [update_employee, update_data] = useMutation(UPDATE_EMPLOYEE);
@@ -152,7 +144,6 @@ export default function Employee_Master() {
             branch_name: row.branch_name,
             ifsc_code: row.ifsc_code,
             account_no: row.account_no,
-            labour_category: row.labour_category
         })
         console.log(modalEmployee);
     }
@@ -206,14 +197,6 @@ export default function Employee_Master() {
             field: 'email_id',
             headerName: 'Email ID',
             width: 250
-        },
-        {
-            field: 'labour_category',
-            headerName: 'Labour Category',
-            width: 250,
-            valueGetter: (params) => {
-                return params.row.labour_category_master.labour_category;
-            }
         },
         // {
         //     field: 'bank_id',

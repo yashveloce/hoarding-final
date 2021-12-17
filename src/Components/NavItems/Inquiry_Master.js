@@ -225,8 +225,8 @@ subscription MySubscription($_eq: String = "false"){
   }
 `
 const SEARCH_INVENTORYALL = gql`
-query MyQuery($state:Int!,$district:Int!,$subdistrict:Int!,$media_type:Int!,$illumination:String="",$_gt:date!){
-    Inventory_Master(where: {District: {_eq:$district}, Media_Type: {_eq:$media_type}, State: {_eq:$state}, Subdistrict: {_eq:$subdistrict}, Illumination: {_eq:$illumination}, AvailabilityTo: {_lt:$_gt}}) {
+query MyQuery($state:Int!,$district:Int!,$subdistrict:Int!,$media_type:Int!,$_gt:date!){
+    Inventory_Master(where: {District: {_eq:$district}, Media_Type: {_eq:$media_type}, State: {_eq:$state}, Subdistrict: {_eq:$subdistrict}, AvailabilityTo: {_lt:$_gt}}) {
       AvailabilityFrom
       AvailabilityTo
       BookedBy
@@ -859,14 +859,14 @@ export default function Inquiry_Master() {
                                     <input defaultValue={modalId} onChange={onModalIdChange} className="form-control mt-1" name="id" type="text" required />
                                 </div>
                                 <div className="field col-md-6">
-                                    <label className="required">Name</label>
+                                    <label className="required">Customer Name</label>
                                     <input defaultValue={modalName} onChange={onModalNameChange} className="form-control mt-1" name="name" type="text" required pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." />
                                 </div>
                             </div>
 
                             <div className="row">
                                 <div className="field col-md-6">
-                                    <label className="required">Number</label>
+                                    <label className="required">Customer Number</label>
                                     <input defaultValue={modalNumber} onChange={onModalNumberChange} className="form-control mt-1" name="contact_person" type="number" required pattern="[789][0-9]{9}" title="Please enter Alphabets." />
                                 </div>
                                 <div className="field col-md-6">
@@ -945,13 +945,13 @@ export default function Inquiry_Master() {
                             <input placeholder="enter source of lead" type="text" name="form_sol" onChange={onFormSOLChange} className="form-control mt-1" pattern="^[a-zA-Z\s-]+$" title="Please enter source of lead." />
                         </div>
                         <div className="field col-md-6">
-                            <label className="required">Name</label>
+                            <label className="required">Customer Name</label>
                             <input placeholder="enter customer name" type="text" name="form_name" onChange={onFormNameChange} className="form-control mt-1" pattern="^[a-zA-Z\s-]+$" title="Please enter customer name." />
                         </div>
                     </div><br />
                     <div className="row">
                         <div className="field col-md-6">
-                            <label className="required">Number</label>
+                            <label className="required">Customer Number</label>
                             <input placeholder="enter customer number" type="number" name="form_number" onChange={onFormNumberChange} className="form-control mt-1" pattern="[789][0-9]{9}" title="Please enter valid mobile no" />
                         </div>
                         <div className="field col-md-6">

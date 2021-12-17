@@ -33,7 +33,7 @@ subscription MySubscription($_eq: String = "false"){
 
 
 const Insertlanloard_Master=gql`
-mutation MyMutation($account_no: String = "", $address: String = "", $agreement_from: date = "", $agreement_to: date = "", $bank_name: String = "", $branch_name: String = "", $height: String = "", $ifsc: String = "", $location: String = "", $mobile_number: String = "", $name: String = "", $rent_amount: String = "", $rent_increment_reminder: String = "", $site_address: String = "", $width: String = "") {
+mutation MyMutation($account_no: String = "", $address: String = "", $agreement_from: date!, $agreement_to: date!, $bank_name: String = "", $branch_name: String = "", $height: String = "", $ifsc: String = "", $location: String = "", $mobile_number: String = "", $name: String = "", $rent_amount: String = "", $rent_increment_reminder: String = "", $site_address: String = "", $width: String = "") {
     insert_landlord_management_one(object: {account_no: $account_no, address: $address, agreement_from: $agreement_from, agreement_to: $agreement_to, bank_name: $bank_name, branch_name: $branch_name, height: $height, ifsc: $ifsc, location: $location, mobile_number: $mobile_number, name: $name, rent_amount: $rent_amount, rent_increment_reminder: $rent_increment_reminder, site_address: $site_address,  width: $width}) {
       id
     }
@@ -170,18 +170,12 @@ function Landloard_Management ()  {
 
 
 
-
-
-
-
-
-
     const onInputChange = (e) => {
         setlandloard({ ...landloard, [e.target.name]: e.target.value })
     }
     const onFormSubmit = (e) => {
         e.preventDefault();
-        console.log(e.target)
+        console.log(landloard)
         Insert_landloardmanagementData({ variables: landloard})
         toast.configure();
         toast.success('Successfully Inserted')
@@ -221,13 +215,6 @@ function Landloard_Management ()  {
     }
 
 
-
-
-
-
-
-
-
     const getlandloard_management = useSubscription(getlandloard_Master);
     if (getlandloard_management.loading) {
         return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
@@ -236,16 +223,6 @@ function Landloard_Management ()  {
         return "error" + getlandloard_management.error;
     }
     console.log(getlandloard_management.data);
-
-
-
-
-
-
-
-
-
-
 
     const columns = [
         {
@@ -418,7 +395,7 @@ function Landloard_Management ()  {
                         </div>
                         <div className="field col-md-3">
                             <label className="required">Mobile Number</label>
-                            <input  placeholder="enter contact "defaultValue={modallandloard.mobile_number}onChange={onModalInputChange} type="text" name="mobile_number" className="form-control mt-1" required pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." />
+                            <input  placeholder="enter contact "defaultValue={modallandloard.mobile_number}onChange={onModalInputChange} type="text" name="mobile_number" className="form-control mt-1" required />
                         </div>
                     </div><br />
                     <div className="row">
@@ -546,8 +523,15 @@ function Landloard_Management ()  {
                             <input  placeholder="enter rent amount yearly "onChange={onInputChange} type="text" name="rent_amount" className="form-control mt-1"  title="Please enter valid pan" required />
                         </div>
                         <div className="field col-md-4">
-                            <label className="required">Rent Increment Remainder</label>
-                            <input   type="text" name="rent_increment_reminder" onChange={onInputChange}className="form-control mt-1"  title="Please enter valid pan" required />
+                            <label className="required">Rent Increment Reminder</label>
+                            <select name="rent_increment_reminder" onChange={onInputChange} className="form-control mt-1" required>
+                                <option value="">Select...</option>
+                                <option key="1" value="1">1 month</option>
+                                <option key="2" value="2">2 month</option>
+                                <option key="3" value="3">3 month</option>
+                                <option key="4" value="4">4 month</option>
+                            </select>
+                            {/* <input   type="text" name="rent_increment_reminder" onChange={onInputChange}className="form-control mt-1"  title="Please enter valid pan" required /> */}
                         </div>
                     </div><br/>
                     <div className="row">

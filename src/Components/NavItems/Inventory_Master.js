@@ -89,8 +89,8 @@ subscription MySubscription($_eq: String = "false"){
   }
 `
 const Insert_Inventory = gql`
-mutation MyMutation($AvailabilityFrom: date = "",$AvailabilityTo: date = "", $DisplayRatePM: String = "", $Height: String = "", $Illumination: String = "", $Location: String = "", $Media_Type:Int!, $NoofDisplay: String = "", $OneTimeMountingCost: String = "", $OneTimePrintingCost: String = "", $Total: String = "", $Totalsqft: String = "", $Width: String = "", $id: Int = 10,$DrpmRate:String!,$OtpcRate:String!,$OtmcRate:String!,$hoarding_insurance:String="",$hoarding_insurance_from:date!,$hoarding_insurance_to:date!,$Status:String!,$erection:Int!,$State:Int!,$District:Int!,$Subdistrict:Int!) {
-    insert_Inventory_Master_one(object: {AvailabilityFrom: $AvailabilityFrom, AvailabilityTo: $AvailabilityTo, DisplayRatePM: $DisplayRatePM, DrpmRate: $DrpmRate, Height: $Height, Illumination: $Illumination, Location: $Location, Media_Type: $Media_Type, NoofDisplay: $NoofDisplay, OneTimeMountingCost: $OneTimeMountingCost, OneTimePrintingCost: $OneTimePrintingCost, OtmcRate: $OtmcRate, OtpcRate: $OtpcRate, Total: $Total, Totalsqft: $Totalsqft, Width: $Width,Status:$Status, hoarding_insurance: $hoarding_insurance, hoarding_insurance_from: $hoarding_insurance_from, hoarding_insurance_to: $hoarding_insurance_to,erection:$erection,State:$State,District:$District,Subdistrict:$Subdistrict}){
+mutation MyMutation($AvailabilityFrom: date = "",$AvailabilityTo: date = "", $DisplayRatePM: String = "", $Height: String = "", $Illumination: String = "", $Location: String = "", $Media_Type:Int!, $NoofDisplay: String = "", $OneTimeMountingCost: String = "", $OneTimePrintingCost: String = "", $Total: String = "", $Totalsqft: String = "", $Width: String = "", $id: Int = 10,$DrpmRate:String!,$OtpcRate:String!,$OtmcRate:String!,$hoarding_insurance:String="",$hoarding_insurance_from:date!,$hoarding_insurance_to:date!,$Status:String!,$erection:Int!,$State:Int!,$District:Int!,$Subdistrict:Int!,$BookedBy:String!) {
+    insert_Inventory_Master_one(object: {AvailabilityFrom: $AvailabilityFrom, AvailabilityTo: $AvailabilityTo, DisplayRatePM: $DisplayRatePM, DrpmRate: $DrpmRate, Height: $Height, Illumination: $Illumination, Location: $Location, Media_Type: $Media_Type, NoofDisplay: $NoofDisplay, OneTimeMountingCost: $OneTimeMountingCost, OneTimePrintingCost: $OneTimePrintingCost, OtmcRate: $OtmcRate, OtpcRate: $OtpcRate, Total: $Total, Totalsqft: $Totalsqft, Width: $Width,Status:$Status, hoarding_insurance: $hoarding_insurance, hoarding_insurance_from: $hoarding_insurance_from, hoarding_insurance_to: $hoarding_insurance_to,erection:$erection,State:$State,District:$District,Subdistrict:$Subdistrict,BookedBy:$BookedBy}){
       id
     }
   }
@@ -511,7 +511,7 @@ export default function Inventory_Master() {
 
     const onFormSubmit = (e) => {
         e.preventDefault();
-        Insert_InventorymasterData({ variables: { Location: Location, Media_Type: Media_Type, Illumination: Illumination, Width: Width.toString(), Height: Height.toString(), NoofDisplay: NoofDisplay.toString(), Totalsqft: Totalsqft.toString(), DisplayRatePM: DisplayRatePM.toString(), OneTimeMountingCost: OneTimeMountingCost.toString(), OneTimePrintingCost: OneTimePrintingCost.toString(), Total: Total.toString(), AvailabilityFrom: AvailabilityFrom, AvailabilityTo: AvailabilityTo, DrpmRate: DrpmRate.toString(), OtpcRate: OtpcRate.toString(), OtmcRate: OtmcRate.toString(), hoarding_insurance: hoarding_insurance, hoarding_insurance_from: hoarding_insurance_from, hoarding_insurance_to: hoarding_insurance_to, Status: Status, erection: Erection, State: State, District: District, Subdistrict: Subdistrict } })
+        Insert_InventorymasterData({ variables: { Location: Location, Media_Type: Media_Type, Illumination: Illumination, Width: Width.toString(), Height: Height.toString(), NoofDisplay: NoofDisplay.toString(), Totalsqft: Totalsqft.toString(), DisplayRatePM: DisplayRatePM.toString(), OneTimeMountingCost: OneTimeMountingCost.toString(), OneTimePrintingCost: OneTimePrintingCost.toString(), Total: Total.toString(), AvailabilityFrom: AvailabilityFrom, AvailabilityTo: AvailabilityTo, DrpmRate: DrpmRate.toString(), OtpcRate: OtpcRate.toString(), OtmcRate: OtmcRate.toString(), hoarding_insurance: hoarding_insurance, hoarding_insurance_from: hoarding_insurance_from, hoarding_insurance_to: hoarding_insurance_to, Status: Status, erection: Erection, State: State, District: District, Subdistrict: Subdistrict,BookedBy:user } })
         toast.configure();
         toast.success('Successfully Inserted')
     }
@@ -759,6 +759,7 @@ export default function Inventory_Master() {
             }
         },
     ];
+    const user = localStorage.getItem("userdata");
     //console.log(getInventory.data);
     const rows = getInventory.data.Inventory_Master;
     let newData = []
