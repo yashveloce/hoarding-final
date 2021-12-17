@@ -994,8 +994,8 @@ export default function Inquiry_Master() {
                 </form>
             </Card>
             <Card variant="outlined" className="form-card" style={{
-                margin: "2%",
-                padding: "8%",
+                margin: "4%",
+                padding: "16%",
                 background: "#FFFFFF",
                 boxShadow: "2px 2px 37px rgba(0, 0, 0, 0.25)",
                 borderRadius: "10px"
