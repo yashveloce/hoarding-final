@@ -130,7 +130,7 @@ subscription MySubscription($_eq: date = "now()") {
   }
 `
 const READ_LANDLORD_MANAGEMENT=gql`
-subscription MySubscription($_eq: String = "false"){
+query MyQuery($_eq: String = "false"){
     landlord_management(where: {isDeleted: {_eq: $_eq}}){
       account_no
       address
@@ -154,14 +154,14 @@ subscription MySubscription($_eq: String = "false"){
 `
 
 
-function Hoarding_Insurance() {
+function Dashboard() {
     //states
 
 
 
     //Queries
     const read_inventory = useSubscription(READ_INVENTORY);
-    const read_landlord_management = useSubscription(READ_LANDLORD_MANAGEMENT);
+    const read_landlord_management = useQuery(READ_LANDLORD_MANAGEMENT);
     //const [get_inventory,ret_data] = useLazyQuery(GET_INVENTORY);
     if (read_inventory.loading || read_landlord_management.loading) {
         return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
@@ -181,26 +181,18 @@ function Hoarding_Insurance() {
             hide: false,
         },
         {
-            field: 'inventory',
-            headerName: 'Inventory',
+            field: 'Location',
+            headerName: 'Location',
             width: 160,
-            valueGetter: (params) => {
-                return params.row.Inventory_Master.Location;
-            }
         },
         {
-            field: 'insurance',
+            field: 'hoarding_insurance',
             headerName: 'Insurance',
             width: 200,
             editable: false,
         },
     ];
     const columns1=[
-        {
-            field: 'sno',
-            headerName: 'Serial No',
-            width: 150,
-        },
         {
             field: 'id',
             headerName: 'ID',
@@ -304,6 +296,24 @@ function Hoarding_Insurance() {
         newData.push({ sno: index + 1, ...item })
     })
     const rows1 = read_landlord_management.data.landlord_management;
+    const rows2=[];
+    read_landlord_management.data.landlord_management.map((item)=>{
+        //console.log(item.agreement_to);
+        var d = new Date(item.agreement_to);
+        d.setMonth(d.getMonth() - parseInt(item.rent_increment_reminder));
+        var sys_date=d.toISOString().split('T')[0]
+        //console.log(sys_date);
+        var today = new Date(),
+
+    date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var d1 = new Date(date);
+        var d2 = new Date(sys_date);
+        if(d1.getMonth()===d2.getMonth())
+        {
+            rows2.push(item);
+        }
+    })
+    console.log(rows2)
     let newData1 = []
     rows1.map((item, index) => {
         newData1.push({ sno: index + 1, ...item })
@@ -354,7 +364,7 @@ function Hoarding_Insurance() {
                 <div style={{ height: 300, width: '100%' }}>
                     <h4>Landlord Rent Reminder</h4>
                     <DataGrid
-                        rows={newData1}
+                        rows={rows2}
                         columns={columns1}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
@@ -370,4 +380,4 @@ function Hoarding_Insurance() {
     )
 }
 
-export default Hoarding_Insurance
+export default Dashboard

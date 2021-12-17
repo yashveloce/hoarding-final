@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { Modal, Button } from 'react-bootstrap';
 
 
-const getlandloard_Master=gql`
+const getlandloard_Master = gql`
 subscription MySubscription($_eq: String = "false"){
     landlord_management(where: {isDeleted: {_eq: $_eq}}){
       account_no
@@ -32,7 +32,7 @@ subscription MySubscription($_eq: String = "false"){
 `
 
 
-const Insertlanloard_Master=gql`
+const Insertlanloard_Master = gql`
 mutation MyMutation($account_no: String = "", $address: String = "", $agreement_from: date!, $agreement_to: date!, $bank_name: String = "", $branch_name: String = "", $height: String = "", $ifsc: String = "", $location: String = "", $mobile_number: String = "", $name: String = "", $rent_amount: String = "", $rent_increment_reminder: String = "", $site_address: String = "", $width: String = "") {
     insert_landlord_management_one(object: {account_no: $account_no, address: $address, agreement_from: $agreement_from, agreement_to: $agreement_to, bank_name: $bank_name, branch_name: $branch_name, height: $height, ifsc: $ifsc, location: $location, mobile_number: $mobile_number, name: $name, rent_amount: $rent_amount, rent_increment_reminder: $rent_increment_reminder, site_address: $site_address,  width: $width}) {
       id
@@ -40,7 +40,7 @@ mutation MyMutation($account_no: String = "", $address: String = "", $agreement_
   }
 `
 
-const Updatelandloard_Master=gql`
+const Updatelandloard_Master = gql`
 mutation MyMutation($id: Int = 0, $account_no: String = "", $address: String = "", $agreement_from: date = "", $agreement_to: date = "", $bank_name: String = "", $branch_name: String = "", $height: String = "", $id1: Int = 10, $ifsc: String = "", $location: String = "", $mobile_number: String = "", $name: String = "", $rent_amount: String = "", $rent_increment_reminder: String = "", $site_address: String = "", $width: String = "") {
     update_landlord_management_by_pk(pk_columns: {id: $id}, _set: {account_no: $account_no, address: $address, agreement_from: $agreement_from, agreement_to: $agreement_to, bank_name: $bank_name, branch_name: $branch_name, height: $height, ifsc: $ifsc, location: $location, mobile_number: $mobile_number, name: $name, rent_amount: $rent_amount, rent_increment_reminder: $rent_increment_reminder, site_address: $site_address,width: $width}) {
       account_no
@@ -65,7 +65,7 @@ mutation MyMutation($id: Int = 0, $account_no: String = "", $address: String = "
   
 
 `
-const Deletelandloard_Master=gql`
+const Deletelandloard_Master = gql`
 mutation MyMutation($id: Int = 10, $isDeleted: String = "true") {
     update_landlord_management_by_pk(pk_columns: {id: $id}, _set: {isDeleted: $isDeleted}) {
       id
@@ -91,7 +91,7 @@ mutation MyMutation($id: Int = 10, $isDeleted: String = "true") {
 //       rent_amount
 //       rent_increment_reminder
 //       site_address
-      
+
 //       width
 //     }
 //   }
@@ -102,7 +102,7 @@ mutation MyMutation($id: Int = 10, $isDeleted: String = "true") {
 
 
 
-function Landloard_Management ()  {
+function Landloard_Management() {
     const [showModal, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -116,13 +116,13 @@ function Landloard_Management ()  {
         branch_name: '',
         ifsc: '',
         account_no: '',
-        rent_amount:'',
-        width:'',
-        height:'',
-        site_address:'',
-        agreement_from:'',
-        agreement_to:'',
-        rent_increment_reminder:'',
+        rent_amount: '',
+        width: '',
+        height: '',
+        site_address: '',
+        agreement_from: '',
+        agreement_to: '',
+        rent_increment_reminder: '',
 
 
     });
@@ -137,25 +137,19 @@ function Landloard_Management ()  {
         branch_name: '',
         ifsc: '',
         account_no: '',
-        rent_amount:'',
-        width:'',
-        height:'',
-        site_address:'',
-        agreement_from:'',
-        agreement_to:'',
-        rent_increment_reminder:'',
+        rent_amount: '',
+        width: '',
+        height: '',
+        site_address: '',
+        agreement_from: '',
+        agreement_to: '',
+        rent_increment_reminder: '',
 
     });
-
-
-
-
 
     const [Insert_landloardmanagementData] = useMutation(Insertlanloard_Master);
     const [update_landloardmanagementData] = useMutation(Updatelandloard_Master);
     const [delete_landloardmanagementData] = useMutation(Deletelandloard_Master);
-
-
 
     const onModalInputChange = (e) => {
         setModallandloard({ ...modallandloard, [e.target.name]: e.target.value })
@@ -167,28 +161,21 @@ function Landloard_Management ()  {
         toast.configure();
         toast.warning('Successfully Updated')
     }
-
-
-
     const onInputChange = (e) => {
         setlandloard({ ...landloard, [e.target.name]: e.target.value })
     }
     const onFormSubmit = (e) => {
         e.preventDefault();
         console.log(landloard)
-        Insert_landloardmanagementData({ variables: landloard})
+        Insert_landloardmanagementData({ variables: landloard })
         toast.configure();
         toast.success('Successfully Inserted')
     }
-
-
-
     const onDelete = (id) => {
         delete_landloardmanagementData({ variables: { id: id } })
         toast.configure();
         toast.error('Successfully Deleted')
     }
-
     const onEdit = (row) => {
         handleShow();
         setModallandloard({
@@ -201,20 +188,18 @@ function Landloard_Management ()  {
             branch_name: row.branch_name,
             ifsc: row.ifsc,
             account_no: row.account_no,
-            location:row.location,
-            width:row.width,
-            height:row.height,
-            rent_amount:row.rent_amount,
-            agreement_from:row.agreement_from,
-            agreement_to:row.agreement_to,
-            rent_increment_reminder:row.rent_increment_reminder
+            location: row.location,
+            width: row.width,
+            height: row.height,
+            rent_amount: row.rent_amount,
+            agreement_from: row.agreement_from,
+            agreement_to: row.agreement_to,
+            rent_increment_reminder: row.rent_increment_reminder
 
 
         })
         console.log(modallandloard);
     }
-
-
     const getlandloard_management = useSubscription(getlandloard_Master);
     if (getlandloard_management.loading) {
         return <div style={{ width: "100%", marginTop: '25%', textAlign: 'center' }}><CircularProgress /></div>;
@@ -254,7 +239,7 @@ function Landloard_Management ()  {
             width: 200,
             editable: false,
         },
-       
+
         {
             field: 'site_address',
             headerName: 'Site Address',
@@ -279,13 +264,13 @@ function Landloard_Management ()  {
             width: 200,
             editable: false,
         },
-         {
+        {
             field: 'agreement_from',
             headerName: 'Agreement From ',
             width: 200,
             editable: false,
         },
-         {
+        {
             field: 'agreement_to',
             headerName: 'Agreement To ',
             width: 200,
@@ -322,14 +307,14 @@ function Landloard_Management ()  {
             headerName: 'IFSC ',
             width: 200,
             editable: false,
-        }, 
+        },
         {
             field: 'account_no',
             headerName: 'Account Number ',
             width: 200,
             editable: false,
-        }, 
-       
+        },
+
         {
             field: 'action',
             headerName: 'Action',
@@ -339,7 +324,7 @@ function Landloard_Management ()  {
                     <div className="" style={{ width: "250%", textAlign: 'center' }}>
                         <button type="button" className="btn btn-warning" data-toggle="tooltip" title="Edit" style={{ marginRight: '10%' }} ><i className="bi bi-pencil-fill" onClick={() => { onEdit(params.row) }}></i></button>
 
-                        <button style={{ marginLeft: '20%' }} className="btn btn-danger" data-toggle="tooltip" title="Delete"onClick={() => {
+                        <button style={{ marginLeft: '20%' }} className="btn btn-danger" data-toggle="tooltip" title="Delete" onClick={() => {
                             const confirmBox = window.confirm(
                                 "Do you really want to delete?"
                             )
@@ -353,137 +338,127 @@ function Landloard_Management ()  {
             }
         },
     ];
-
-
-
-
-
-
-
-
-
-
     const rows = getlandloard_management.data.landlord_management;
-    let newData=[]
-    rows.map((item,index)=>{
-        newData.push({sno:index+1,...item})
+    let newData = []
+    rows.map((item, index) => {
+        newData.push({ sno: index + 1, ...item })
     })
 
-    return ( 
+    return (
         <div>
 
-<Modal show={showModal} onHide={handleClose}>
-                    <Modal.Header>
-                        <Modal.Title>Landloard Master</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
+            <Modal show={showModal} onHide={handleClose}>
+                <Modal.Header>
+                    <Modal.Title>Landloard Master</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
 
                     <form onSubmit={onModalFormSubmit} className="form-group" padding="2px">
-                    <div className="row">
-                    <div className="field col-md-3">
+                        <div className="row">
+                            <div className="field col-md-3">
                                 <label className="required">ID</label>
                                 <input defaultValue={modallandloard.id} onChange={onModalInputChange} className="form-control mt-1" name="id" type="text" placeholder="enter id" />
                             </div>
-                        <div className="field col-md-3">
-                            <label className="required">landloard Name</label>
-                            <input placeholder="enter name"defaultValue={modallandloard.name}onChange={onModalInputChange}  type="text" name="name" className="form-control mt-1" required pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." />
-                            <span ></span>
-                        </div>
-                        <div className="field col-md-3">
-                            <label className="required">landloard Address</label>
-                            <input  placeholder="enter address" defaultValue={modallandloard.address}onChange={onModalInputChange} type="text" name="address" className="form-control mt-1" required pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." />
-                        </div>
-                        <div className="field col-md-3">
-                            <label className="required">Mobile Number</label>
-                            <input  placeholder="enter contact "defaultValue={modallandloard.mobile_number}onChange={onModalInputChange} type="text" name="mobile_number" className="form-control mt-1" required />
-                        </div>
-                    </div><br />
-                    <div className="row">
-                       
-                        <div className="field col-md-4">
-                            <label className="required">Width</label>
-                            <input  placeholder="enter Width"defaultValue={modallandloard.width}onChange={onModalInputChange} type="number" name="width" className="form-control mt-1"  title="Please enter valid email address" required />
-                        </div>
-                        <div className="field col-md-4">
-                            <label className="required">Height</label>
-                            <input  placeholder="enter height" defaultValue={modallandloard.height}onChange={onModalInputChange} type="number" name="height" className="form-control mt-1"  title="Please enter valid email address" required />
-                        </div>
-                    </div><br />
-                    <div className="row">
-                        <div className="field col-md-4">
-                            <label className="required">Location</label>
-                            <input  placeholder="enter location"defaultValue={modallandloard.location}onChange={onModalInputChange} type="text" name="location" className="form-control mt-1"  title="Please enter valid gstin" required />
-                        </div>
-                        <div className="field col-md-4">
-                            <label className="required">Rent Amount Yearly</label>
-                            <input  placeholder="enter rent amount yearly "defaultValue={modallandloard.rent_amount}onChange={onModalInputChange} type="number" name="rent_amount" className="form-control mt-1"  title="Please enter valid pan" required />
-                        </div>
-                        <div className="field col-md-4">
-                            <label className="required">Rent Increment Remainder</label>
-                            <input   type="text" name="rent_increment_reminder" defaultValue={modallandloard.rent_increment_reminder}onChange={onModalInputChange}className="form-control mt-1"  title="Please enter valid pan" required />
-                        </div>
-                    </div><br/>
-                    <div className="row">
-                        <div className="field col-md-4">
-                            <label className="required">Agreement Tenure  From</label>
-                            <input   type="date" name="agreement_from"defaultValue={modallandloard.agreement_from}onChange={onModalInputChange} className="form-control mt-1"  title="Please enter valid gstin" required />
-                        </div>
-                        <div className="field col-md-4">
-                            <label className="required">Agreement Tenure  To</label>
-                            <input  type="date" name="agreement_to" defaultValue={modallandloard.agreement_to}onChange={onModalInputChange}className="form-control mt-1"  title="Please enter valid gstin" required />
-                        </div>
-                        <div className="field col-md-4">
-                            <label className="required">Site Address</label>
-                            <input   type="text" name="site_address"defaultValue={modallandloard.site_address}onChange={onModalInputChange} className="form-control mt-1"  title="Please enter valid gstin" required />
-                        </div>
-                    </div>
-                    <br />
-                    <h5 style={{ textAlign: 'center' }}>Bank Details</h5><br/>
-                    <div className="row">
-                        <div className="field col-md-6">
-                            <label className="required">Bank Name</label>
-                            <input  placeholder="enter Bank Name"defaultValue={modallandloard.bank_name}onChange={onModalInputChange} type="text" name="bank_name" className="form-control mt-1"  title="Please enter valid gstin" required />
-                        
-                        </div>
-                        <div className="field col-md-6">
-                            <label className="required">Branch Name</label>
-                            <input  placeholder="enter Branch Name"defaultValue={modallandloard.branch_name} onChange={onModalInputChange}type="text" name="branch_name" className="form-control mt-1" title="Please enter valid gstin" required />
-                          
-                        </div>
-                        
-                    </div><br />
-                    <div className="row">
-                        <div className="field col-md-6">
-                            <label className="required">IFSC</label>
-                            <input  type="text" name="ifsc"defaultValue={modallandloard.ifsc}onChange={onModalInputChange} className="form-control" placeholder="enter IFSC" />
+                            <div className="field col-md-3">
+                                <label className="required">landloard Name</label>
+                                <input placeholder="enter name" defaultValue={modallandloard.name} onChange={onModalInputChange} type="text" name="name" className="form-control mt-1" required pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." />
+                                <span ></span>
+                            </div>
+                            <div className="field col-md-3">
+                                <label className="required">landloard Address</label>
+                                <input placeholder="enter address" defaultValue={modallandloard.address} onChange={onModalInputChange} type="text" name="address" className="form-control mt-1" required pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." />
+                            </div>
+                            <div className="field col-md-3">
+                                <label className="required">Mobile Number</label>
+                                <input placeholder="enter contact " defaultValue={modallandloard.mobile_number} onChange={onModalInputChange} type="text" name="mobile_number" className="form-control mt-1" required />
+                            </div>
+                        </div><br />
+                        <div className="row">
 
+                            <div className="field col-md-4">
+                                <label className="required">Width</label>
+                                <input placeholder="enter Width" defaultValue={modallandloard.width} onChange={onModalInputChange} type="number" name="width" className="form-control mt-1" title="Please enter valid email address" required />
+                            </div>
+                            <div className="field col-md-4">
+                                <label className="required">Height</label>
+                                <input placeholder="enter height" defaultValue={modallandloard.height} onChange={onModalInputChange} type="number" name="height" className="form-control mt-1" title="Please enter valid email address" required />
+                            </div>
+                        </div><br />
+                        <div className="row">
+                            <div className="field col-md-4">
+                                <label className="required">Location</label>
+                                <input placeholder="enter location" defaultValue={modallandloard.location} onChange={onModalInputChange} type="text" name="location" className="form-control mt-1" title="Please enter valid gstin" required />
+                            </div>
+                            <div className="field col-md-4">
+                                <label className="required">Rent Amount Yearly</label>
+                                <input placeholder="enter rent amount yearly " defaultValue={modallandloard.rent_amount} onChange={onModalInputChange} type="number" name="rent_amount" className="form-control mt-1" title="Please enter valid pan" required />
+                            </div>
+                            <div className="field col-md-4">
+                                <label className="required">Rent Increment Remainder</label>
+                                <input type="text" name="rent_increment_reminder" defaultValue={modallandloard.rent_increment_reminder} onChange={onModalInputChange} className="form-control mt-1" title="Please enter valid pan" required />
+                            </div>
+                        </div><br />
+                        <div className="row">
+                            <div className="field col-md-4">
+                                <label className="required">Agreement Tenure  From</label>
+                                <input type="date" name="agreement_from" defaultValue={modallandloard.agreement_from} onChange={onModalInputChange} className="form-control mt-1" title="Please enter valid gstin" required />
+                            </div>
+                            <div className="field col-md-4">
+                                <label className="required">Agreement Tenure  To</label>
+                                <input type="date" name="agreement_to" defaultValue={modallandloard.agreement_to} onChange={onModalInputChange} className="form-control mt-1" title="Please enter valid gstin" required />
+                            </div>
+                            <div className="field col-md-4">
+                                <label className="required">Site Address</label>
+                                <input type="text" name="site_address" defaultValue={modallandloard.site_address} onChange={onModalInputChange} className="form-control mt-1" title="Please enter valid gstin" required />
+                            </div>
                         </div>
-                        <div className="field col-md-6">
-                            <label className="required">Account Number</label>
-                            <input  type="text" name="account_no"defaultValue={modallandloard.account_no}onChange={onModalInputChange} className="form-control" placeholder="enter Account Number"/>
-                        </div>
-                        
-                    </div><br />
-                    <br />
-                    <div className="field" style={{ width: '100%', textAlign: 'center', marginTop: '40px' }}>
-                        <button className="btn btn-primary" type='submit' style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Save</button>
-
-                        
                         <br />
+                        <h5 style={{ textAlign: 'center' }}>Bank Details</h5><br />
+                        <div className="row">
+                            <div className="field col-md-6">
+                                <label className="required">Bank Name</label>
+                                <input placeholder="enter Bank Name" defaultValue={modallandloard.bank_name} onChange={onModalInputChange} type="text" name="bank_name" className="form-control mt-1" title="Please enter valid gstin" required />
+
+                            </div>
+                            <div className="field col-md-6">
+                                <label className="required">Branch Name</label>
+                                <input placeholder="enter Branch Name" defaultValue={modallandloard.branch_name} onChange={onModalInputChange} type="text" name="branch_name" className="form-control mt-1" title="Please enter valid gstin" required />
+
+                            </div>
+
+                        </div><br />
+                        <div className="row">
+                            <div className="field col-md-6">
+                                <label className="required">IFSC</label>
+                                <input type="text" name="ifsc" defaultValue={modallandloard.ifsc} onChange={onModalInputChange} className="form-control" placeholder="enter IFSC" />
+
+                            </div>
+                            <div className="field col-md-6">
+                                <label className="required">Account Number</label>
+                                <input type="text" name="account_no" defaultValue={modallandloard.account_no} onChange={onModalInputChange} className="form-control" placeholder="enter Account Number" />
+                            </div>
+
+                        </div><br />
                         <br />
+                        <div className="field" style={{ width: '100%', textAlign: 'center', marginTop: '40px' }}>
+                            <button className="btn btn-primary" type='submit' style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Save</button>
 
-                    </div>
-                    <br />
-                </form>
 
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Close
-                        </Button>
+                            <br />
+                            <br />
 
-                    </Modal.Footer>
-                </Modal>
+                        </div>
+                        <br />
+                    </form>
+
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+
+                </Modal.Footer>
+            </Modal>
 
 
 
@@ -494,33 +469,33 @@ function Landloard_Management ()  {
                 boxShadow: "2px 2px 37px rgba(0, 0, 0, 0.25)",
                 borderRadius: "10px"
             }}>
-                <h4 className="text-center">Landloard Management</h4><br/>
+                <h4 className="text-center">Landloard Management</h4><br />
 
                 <form onSubmit={onFormSubmit} className="form-group" padding="2px">
                     <div className="row">
                         <div className="field col-md-4">
                             <label className="required">Landloard Name</label>
-                            <input placeholder="enter name"onChange={onInputChange}  type="text" name="name" className="form-control mt-1" required pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." />
+                            <input placeholder="enter name" onChange={onInputChange} type="text" name="name" className="form-control mt-1" required pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." />
                             <span ></span>
                         </div>
                         <div className="field col-md-4">
                             <label className="required">Landloard Address</label>
-                            <input  placeholder="enter address"onChange={onInputChange} type="text" name="address" className="form-control mt-1" required pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." />
+                            <input placeholder="enter address" onChange={onInputChange} type="text" name="address" className="form-control mt-1" required pattern="^[a-zA-Z\s-]+$" title="Please enter Alphabets." />
                         </div>
                         <div className="field col-md-4">
                             <label className="required">Mobile Number</label>
-                            <input  placeholder="+91 "onChange={onInputChange} type="tel" name="mobile_number" className="form-control mt-1" required pattern="[789][0-9]{9}" title="Please enter Alphabets." />
+                            <input placeholder="+91 " onChange={onInputChange} type="tel" name="mobile_number" className="form-control mt-1" required pattern="[789][0-9]{9}" title="Please enter Alphabets." />
                         </div>
                     </div><br />
-                   
+
                     <div className="row">
                         <div className="field col-md-4">
                             <label className="required">Location</label>
-                            <input  placeholder="enter location"onChange={onInputChange} type="text" name="location" className="form-control mt-1"  title="Please enter valid gstin" required />
+                            <input placeholder="enter location" onChange={onInputChange} type="text" name="location" className="form-control mt-1" title="Please enter valid gstin" required />
                         </div>
                         <div className="field col-md-4">
                             <label className="required">Rent Amount Yearly</label>
-                            <input  placeholder="enter rent amount yearly "onChange={onInputChange} type="text" name="rent_amount" className="form-control mt-1"  title="Please enter valid pan" required />
+                            <input placeholder="enter rent amount yearly " onChange={onInputChange} type="text" name="rent_amount" className="form-control mt-1" title="Please enter valid pan" required />
                         </div>
                         <div className="field col-md-4">
                             <label className="required">Rent Increment Reminder</label>
@@ -533,63 +508,63 @@ function Landloard_Management ()  {
                             </select>
                             {/* <input   type="text" name="rent_increment_reminder" onChange={onInputChange}className="form-control mt-1"  title="Please enter valid pan" required /> */}
                         </div>
-                    </div><br/>
+                    </div><br />
                     <div className="row">
                         <div className="field col-md-4">
                             <label className="required">Agreement Tenure  From</label>
-                            <input   type="date" name="agreement_from"onChange={onInputChange} className="form-control mt-1"  title="Please enter valid gstin" required />
+                            <input type="date" name="agreement_from" onChange={onInputChange} className="form-control mt-1" title="Please enter valid gstin" required />
                         </div>
                         <div className="field col-md-4">
                             <label className="required">Agreement Tenure  To</label>
-                            <input  type="date" name="agreement_to" onChange={onInputChange}className="form-control mt-1"  title="Please enter valid gstin" required />
+                            <input type="date" name="agreement_to" onChange={onInputChange} className="form-control mt-1" title="Please enter valid gstin" required />
                         </div>
                         <div className="field col-md-4">
                             <label className="required">Site Address</label>
-                            <input   type="text" name="site_address"onChange={onInputChange} className="form-control mt-1"  title="Please enter valid gstin" required />
+                            <input type="text" name="site_address" onChange={onInputChange} className="form-control mt-1" title="Please enter valid gstin" required />
                         </div>
-                    </div><br/>
+                    </div><br />
                     <div className="row">
                         <div className="field col-md-4">
                             <label className="required">Width</label>
-                            <input  placeholder="enter Width"onChange={onInputChange} type="number" name="width" className="form-control mt-1"  title="Please enter valid email address" required />
+                            <input placeholder="enter Width" onChange={onInputChange} type="number" name="width" className="form-control mt-1" title="Please enter valid email address" required />
                         </div>
                         <div className="field col-md-4">
                             <label className="required">Height</label>
-                            <input  placeholder="enter height"onChange={onInputChange} type="number" name="height" className="form-control mt-1"  title="Please enter valid email address" required />
+                            <input placeholder="enter height" onChange={onInputChange} type="number" name="height" className="form-control mt-1" title="Please enter valid email address" required />
                         </div>
                     </div>
                     <br />
-                    <h5 style={{ textAlign: 'center' }}>Bank Details</h5><br/>
+                    <h5 style={{ textAlign: 'center' }}>Bank Details</h5><br />
                     <div className="row">
                         <div className="field col-md-6">
                             <label className="required">Bank Name</label>
-                            <input  placeholder="enter bank Name"onChange={onInputChange} type="text" name="bank_name" className="form-control mt-1"  title="Please enter valid gstin" required />
-                        
+                            <input placeholder="enter bank Name" onChange={onInputChange} type="text" name="bank_name" className="form-control mt-1" title="Please enter valid gstin" required />
+
                         </div>
                         <div className="field col-md-6">
                             <label className="required">Branch Name</label>
-                            <input  placeholder="enter branch Name" onChange={onInputChange}type="text" name="branch_name" className="form-control mt-1" title="Please enter valid gstin" required />
-                          
+                            <input placeholder="enter branch Name" onChange={onInputChange} type="text" name="branch_name" className="form-control mt-1" title="Please enter valid gstin" required />
+
                         </div>
-                        
+
                     </div><br />
                     <div className="row">
                         <div className="field col-md-6">
                             <label className="required">IFSC</label>
-                            <input  type="text" name="ifsc"onChange={onInputChange} className="form-control"maxlength="11" minlength="11" placeholder="enter IFSC" />
+                            <input type="text" name="ifsc" onChange={onInputChange} className="form-control" maxlength="11" minlength="11" placeholder="enter IFSC" />
 
                         </div>
                         <div className="field col-md-6">
                             <label className="required">Account Number</label>
-                            <input  type="number" name="account_no"onChange={onInputChange} className="form-control" placeholder="enter account number"/>
+                            <input type="number" name="account_no" onChange={onInputChange} className="form-control" placeholder="enter account number" />
                         </div>
-                        
+
                     </div><br />
                     <br />
                     <div className="field" style={{ width: '100%', textAlign: 'center', marginTop: '40px' }}>
-                        <button className="btn btn-primary" type='submit'style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Save</button>
+                        <button className="btn btn-primary" type='submit' style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Save</button>
 
-                        <button className="btn btn-primary" type='reset'style={{ marginRight: '50px', width:'20%', backgroundColor:'#33323296', borderColor:'GrayText' }}>Reset</button>
+                        <button className="btn btn-primary" type='reset' style={{ marginRight: '50px', width: '20%', backgroundColor: '#33323296', borderColor: 'GrayText' }}>Reset</button>
                         <br />
                         <br />
 
@@ -605,7 +580,7 @@ function Landloard_Management ()  {
                 borderRadius: "10px"
             }}>
                 <div style={{ height: 500, width: '100%' }}>
-                <DataGrid
+                    <DataGrid
                         rows={newData}
                         columns={columns}
                         pageSize={10}
@@ -619,7 +594,7 @@ function Landloard_Management ()  {
                 </div>
             </Card>
         </div>
-     );
+    );
 }
- 
+
 export default Landloard_Management;
